@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Galería - Sentirse Bien</title>
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light static-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">Sentirse Bien</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/gallery">Galería</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">Quiénes Somos</a>
+                    </li>
+                </ul>
+            </div>
+            <a class="btn btn-primary" href="#signup">Sign Up</a>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <h1>Galería de Imágenes</h1>
+        <div class="row">
+            <!-- Suponiendo que tienes una lista de imágenes -->
+            {% for image in images %}
+            <div class="col-md-4">
+                <img src="{{ url_for('static', filename='assets/img/' + image) }}" class="img-fluid" alt="Imagen">
+            </div>
+            {% endfor %}
+        </div>
+        <!-- Aquí irán tus imágenes -->
+    </div>
+</body>
+</html>
