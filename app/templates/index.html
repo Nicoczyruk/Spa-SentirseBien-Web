@@ -17,32 +17,48 @@
     </head>
     <body>
         <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light static-top">
-            <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
                 <!-- Título del spa -->
-                <a class="navbar-brand" href="/">
-                    <img src = "/static/assets/img/logo.png" alt="LOGO" style = "width: 50px; height: 30px; margin-right: 8px;">
+                <a class="navbar-brand" href="{{ url_for('main.index') }}">
+                    <img src="/static/assets/img/logo.png" alt="LOGO" style="width: 50px; height: 30px; margin-right: 8px;">
                     Sentirse Bien
                 </a>
-
-                <!-- Menú de navegación -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav mx-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="/">Inicio</a>
+                            <a class="nav-link active" aria-current="page" href="{{ url_for('main.index') }}">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/gallery">Galería</a>
+                            <a class="nav-link" href="{{ url_for('main.gallery') }}">Galería</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/about">Quiénes Somos</a>
+                            <a class="nav-link" href="{{ url_for('main.about') }}">Sobre Nosotros</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.services') }}">Servicios</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.news') }}">Noticias</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.jobs') }}">Empleo</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.contact') }}">Contacto</a>
                         </li>
                     </ul>
+                    <!-- Botones Sign Up y Log In -->
+                    <div class="d-flex">
+                        <a class="btn btn-outline-primary me-2" href="#login">Log In</a>
+                        <a class="btn btn-primary" href="#signup">Sign Up</a>
+                    </div>
                 </div>
-        <!-- Botón Sign Up -->
-        <a class="btn btn-primary" href="#signup">Sign Up</a>
-    </div>
-</nav>
+            </div>
+        </nav>
         <!-- Masthead-->
         <header class="masthead">
             <div class="container position-relative">

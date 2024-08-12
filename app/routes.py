@@ -22,4 +22,39 @@ def about():
 
     return render_template('about.html')
 
+@main.route('/services')
+def services():
+    services_data = [
+        {
+            'image': 'testimonials-1.jpg',
+            'name': 'Masaje Relajante',
+            'description': 'Un masaje para aliviar el estrés y mejorar la circulación.',
+            'price': '$50'
+        },
+        {
+            'image': 'testimonials-2.jpg',
+            'name': 'Tratamiento Facial',
+            'description': 'Revitaliza tu piel con nuestros tratamientos faciales.',
+            'price': '$70'
+        },
+        {
+            'image': 'testimonials-3.jpg',
+            'name': 'Pedicura',
+            'description': 'Cuida tus pies con nuestra pedicura profesional.',
+            'price': '$30'
+        }
+    ]
 
+    return render_template('services.html', services=services_data)
+
+@main.route('/news')
+def news():
+    return render_template('news.html')
+
+@main.route('/jobs')
+def jobs():
+    return render_template('jobs.html')
+
+@main.route('/contact')
+def contact():
+    return render_template('contact.html')
