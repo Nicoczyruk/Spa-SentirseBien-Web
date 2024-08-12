@@ -61,8 +61,8 @@
   --bs-body-font-size: 1rem;
   --bs-body-font-weight: 400;
   --bs-body-line-height: 1.5;
-  --bs-body-color: #212529;
-  --bs-body-bg: #fff;
+  --bs-body-color: #212529; /*Color de letra*/
+  --bs-body-bg: #fff; /*Color fondo*/
   --bs-border-width: 1px;
   --bs-border-style: solid;
   --bs-border-color: #dee2e6;
@@ -99,7 +99,7 @@ body {
   line-height: var(--bs-body-line-height);
   color: var(--bs-body-color);
   text-align: var(--bs-body-text-align);
-  background-color: var(--bs-body-bg);
+  background-color: #ffc9cb;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
@@ -8166,8 +8166,11 @@ textarea.form-control-lg {
 
 .bg-light {
   --bs-bg-opacity: 1;
-  background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
-}
+  background-color: #e9ffc7;
+  /*background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
+  
+   Color FONDO*/
+} 
 
 .bg-dark {
   --bs-bg-opacity: 1;
@@ -10851,7 +10854,7 @@ textarea.form-control-lg {
 header.masthead {
   position: relative;
   background-color: #343a40;
-  background: url("../assets/img/bg-masthead.jpg") no-repeat center center;
+  background: url("../assets/img/Designer (1).jpeg") no-repeat center center;
   background-size: cover;
   padding-top: 8rem;
   padding-bottom: 8rem;
@@ -10942,4 +10945,24 @@ footer.footer {
 
 .navbar-nav .nav-link:hover {
   color: #007bff;
+}
+
+.presentacion {
+  padding: 40px 0; /* Ajusta el espaciado superior e inferior según sea necesario */
+  display: flex;
+  justify-content: center;
+}
+.presentacion .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+}
+.presentacion img {
+  max-width: 150px; /* Ajusta el tamaño máximo del logo según sea necesario */
+}
+
+.custom-text-color {
+  color: #000; /* Color específico para el texto */
 }
