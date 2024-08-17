@@ -2,18 +2,18 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
-    <!-- Incluye Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Enlace al archivo CSS específico para la página de empleo -->
+    <link href="{{ url_for('static', filename='css/jobs.css') }}" rel="stylesheet">
+    <title>Empleo - SPA Sentirse Bien</title>
 </head>
 <body>
     <!-- Navigation-->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg" style="background-color: #e9ffc7;">
         <div class="container-fluid">
             <!-- Título del spa -->
-            <a class="navbar-brand" href="{{ url_for('main.index') }}">
+            <a class="navbar-brand" href="/">
                 <img src="/static/assets/img/logo.png" alt="LOGO" style="width: 50px; height: 30px; margin-right: 8px;">
                 Sentirse Bien
             </a>
@@ -44,26 +44,40 @@
                         <a class="nav-link" href="{{ url_for('main.contact') }}">Contacto</a>
                     </li>
                 </ul>
-                <!-- Botones Sign Up y Log In -->
-                <div class="d-flex">
-                    <a class="btn btn-outline-primary me-2" href="#login">Log In</a>
-                    <a class="btn btn-primary" href="#signup">Sign Up</a>
-                </div>
+                <!-- Botones de inicio de sesión y registro -->
+                <a class="btn btn-outline-primary mx-2" href="#login">Log In</a>
+                <a class="btn btn-primary" href="#signup">Sign Up</a>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="container my-5">
-        <h1 class="text-center">{{ title }}</h1>
-        <p class="text-center">Bienvenido a la sección de {{ title }}. Aquí puedes encontrar toda la información relevante.</p>
-        <!-- Aquí puedes agregar el contenido específico de la página -->
-        <div class="content">
-            {{ content }}
-        </div>
+    <!-- Sección de Empleo -->
+    <div class="container my-5 employment-section">
+        <h1 class="text-center mb-4">¿Estás interesado en trabajar con nosotros? ¡Envíanos tu CV!</h1>
+
+        <form action="/submit-job-application" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="email" class="form-label">Correo Electrónico</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="nombre@ejemplo.com" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="cv" class="form-label">Sube tu CV</label>
+                <input type="file" class="form-control" id="cv" name="cv" accept=".pdf,.doc,.docx" required>
+                <small class="form-text text-muted">Formatos aceptados: PDF, DOC, DOCX</small>
+            </div>
+
+            <div class="mb-3">
+                <label for="message" class="form-label">Contanos acerca de vos</label>
+                <textarea class="form-control" id="message" name="message" rows="5" placeholder="Cuéntanos sobre tus habilidades, experiencia y por qué te gustaría trabajar con nosotros." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+
+        <p class="mt-4">Los candidatos pasarán por un proceso de selección donde evaluaremos sus habilidades y experiencia. Nos pondremos en contacto contigo si tu perfil se ajusta a nuestras necesidades.</p>
     </div>
 
-    <!-- Incluye Bootstrap JS y dependencias de Popper.js -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

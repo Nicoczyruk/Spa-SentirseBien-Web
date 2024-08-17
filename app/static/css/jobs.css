@@ -1,0 +1,47 @@
+/* Estilos para la página de Empleo */
+body {
+    background-color: #ffc9cb; /* Fondo rosado */
+    color: #333; /* Color del texto */
+}
+
+h1 {
+    color: #333; /* Título en color oscuro */
+    background-color: #ffe8ea; /* Fondo rosado claro a juego con el contenedor */
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.employment-section {
+    background-color: #ffe8ea; /* Fondo rosado claro para el contenedor del formulario */
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e9ffc7; /* Añadir un borde verde claro para combinar */
+}
+
+.form-label {
+    font-weight: bold;
+}
+
+.form-control {
+    border-radius: 10px; /* Bordes redondeados en los campos de formulario */
+}
+
+button[type="submit"] {
+    background-color: #e9ffc7; /* Color verde para el botón de enviar */
+    border: none;
+    color: #333;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transiciones suaves */
+    border-radius: 10px; /* Bordes redondeados */
+}
+
+button[type="submit"]:hover {
+    background-color: #c7e9a5; /* Verde más oscuro al pasar el cursor */
+    color: #000;
+}

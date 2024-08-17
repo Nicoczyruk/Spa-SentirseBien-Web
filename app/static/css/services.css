@@ -1,0 +1,133 @@
+/* Fondo general de la sección de servicios */
+body {
+    background-color: #ffc9cb; /* Fondo rosado para el resto de la página */
+    color: #333; /* Color del texto en el resto de la página */
+}
+
+/* Estilos para el contenedor principal */
+.container {
+    background-color: #ffc9cb; /* Fondo rosado para el contenedor */
+    padding: 20px;
+    border-radius: 10px; /* Bordes redondeados */
+}
+
+/* Estilos para la barra de navegación */
+.navbar {
+    background-color: #e9ffc7; /* Color verde para el fondo del menú */
+}
+
+.navbar .nav-link {
+    color: #333; /* Cambiar color del texto del menú para que sea visible */
+}
+
+.navbar .nav-link:hover {
+    color: #007bff; /* Color del texto al pasar el cursor */
+}
+
+/* Estilos para las tarjetas de servicio */
+.service-card {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    color: #fff;
+    transition: transform 0.3s ease; /* Animación para agrandar la tarjeta */
+    width: 100%;
+    background-color: #fff; /* Fondo blanco para las tarjetas */
+    border-radius: 15px; /* Bordes redondeados de la tarjeta */
+    margin-bottom: 20px; /* Espaciado entre tarjetas */
+    padding: 0; /* Asegura que no haya espacio extra */
+}
+
+.service-card:hover {
+    transform: scale(1.05); /* Agranda todo el contenedor, incluyendo título e imagen */
+}
+
+/* Título de cada servicio, posicionado fuera de la imagen pero centrado */
+.service-card h3 {
+    margin: 0; /* Elimina cualquier margen por defecto */
+    position: relative;
+    top: 0; /* Elimina desplazamiento vertical para unir el título a la imagen */
+    z-index: 2; /* Asegura que el título esté encima de la imagen */
+    color: #333; /* Color del texto del título */
+    background: #e9ffc7; /* Fondo de color para el título */
+    padding: 10px 0; /* Ajusta el padding superior/inferior para eliminar espacio adicional */
+    width: 100%; /* Ancho completo de la tarjeta */
+    box-sizing: border-box; /* Incluye padding en el ancho total */
+    font-size: 1.2em; /* Tamaño del texto del título */
+    text-align: center;
+    line-height: 1.2; /* Asegura que el texto tenga un buen espaciado */
+    white-space: nowrap; /* Evita que el texto se corte */
+    overflow: hidden; /* Oculta el desbordamiento si el texto es muy largo */
+    text-overflow: ellipsis; /* Añade puntos suspensivos si el texto es demasiado largo */
+}
+
+.service-card img {
+    width: 100%; /* Ajustar a 100% del contenedor */
+    height: 200px; /* Altura estándar para mantener las proporciones */
+    object-fit: fill; /* Asegura que la imagen se ajuste al contenedor */
+    transition: filter 0.3s ease, transform 0.3s ease; /* Difuminado y agrandamiento */
+    border-radius: 0 0 15px 15px; /* Bordes redondeados solo en la parte inferior */
+}
+
+.service-card:hover img {
+    filter: blur(2px);
+    transform: scale(1.05); /* Agrandar imagen */
+}
+
+
+.service-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: none; /* No hay fondo visible */
+    color: #fff;
+    padding: 10px;
+    transition: opacity 0.3s ease; /* Transición de la opacidad */
+    opacity: 0; /* Inicialmente oculto */
+    visibility: hidden; /* También oculta la visibilidad */
+}
+
+.service-card:hover .service-info {
+    opacity: 1;
+    visibility: visible; /* Asegura que el contenedor sea visible */
+}
+
+.service-description {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.2em;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    text-align: center;
+}
+
+.service-info, .service-description {
+    color: #333; /* Cambia el color del texto a un gris oscuro */
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7); /* Sombra blanca suave */
+}
+
+/* Boton Elegirt */
+
+.btn-choose {
+    background-color: #e9ffc7; /* Color verde del nav */
+    border: none; /* Eliminar bordes */
+    color: #333; /* Color del texto del botón */
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transiciones para el cambio de color */
+    border-radius: 5px; /* Bordes redondeados del botón */
+}
+
+.btn-choose:hover {
+    background-color: #c7e9a5; /* Un verde más oscuro al pasar el cursor */
+    color: #000; /* Cambia el color del texto al pasar el cursor */
+}
