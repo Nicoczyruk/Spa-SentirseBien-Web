@@ -1,42 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Galería - Sentirse Bien</title>
     <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light static-top">
         <div class="container">
-            <a class="navbar-brand" href="/">Sentirse Bien</a>
+            <a class="navbar-brand" href="{{ url_for('main.index') }}">
+                <img src="/static/assets/img/logo.png" alt="LOGO" style="width: 50px; height: 30px; margin-right: 8px;">
+                Sentirse Bien
+            </a>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Inicio</a>
+                        <a class="nav-link active" aria-current="page" href="{{ url_for('main.index') }}">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/gallery">Galería</a>
+                        <a class="nav-link" href="{{ url_for('main.gallery') }}">Galería</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about">Quiénes Somos</a>
+                        <a class="nav-link" href="{{ url_for('main.about') }}">Sobre Nosotros</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.services') }}">Servicios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.news') }}">Noticias</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.jobs') }}">Empleo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.contact') }}">Contacto</a>
                     </li>
                 </ul>
             </div>
             <a class="btn btn-primary" href="#signup">Sign Up</a>
         </div>
     </nav>
-    <div class="container mt-5">
-        <h1>Galería de Imágenes</h1>
-        <div class="row">
-            <!-- Suponiendo que tienes una lista de imágenes -->
-            {% for image in images %}
-            <div class="col-md-4">
-                <img src="{{ url_for('static', filename='assets/img/' + image) }}" class="img-fluid" alt="Imagen">
+
+    <style>
+        .carousel-container {
+            display: flex;
+            margin-top: 1%;
+            margin-left: 20%;
+            margin-right: auto;
+            margin-bottom: 1%;
+        }
+
+        .carousel-cont {
+            width: 500px;
+            height: 500px;
+            position: relative;
+        }
+
+        .carousel-indicators {           
+            top: 45%;
+            left: -620px;
+            transform: translateY(-47%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: absolute;
+            justify-content: space-around;
+            height: 65%;
+            z-index: 10;
+        }
+
+        .carousel-indicators button {
+            transition: transform 0.3s ease; 
+        }
+
+        .carousel-indicators button:hover {
+            transform: scale(1.1); 
+        }
+
+        .carousel-indicators img {
+            transition: transform 0.3s ease; 
+        }
+
+        .carousel-indicators img {
+            width: 100px;
+            height: 30px;
+            display: flex;
+            border-radius: 1%;
+            margin-bottom: 10px;
+        }
+
+        .carousel-indicators button {
+            background-color: transparent;
+            border: none;
+            padding: 0;
+        }
+
+        .carousel-inner img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 3%;
+        }
+
+        .text-container {
+            margin-left: 20px;
+            max-width: 300px;
+        }
+
+        .text-container h5 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .text-container p {
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 40px;
+            z-index: 15;
+        }
+    </style>
+
+    <div class="carousel-container">
+        <div class="carousel-cont">
+            <div class="carousel slide " id="carouselDemo" data-bs-wrap="true" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="/static/assets/img/Depilacion2.jpeg" class="w-100 d-block" alt="0">
+                    </div>
+
+                    <div class="carousel-item">
+                        <img src="/static/assets/img/imagen-spa1.jpg" class="w-100 d-block" alt="1">
+                    </div>
+
+                    <div class="carousel-item">
+                        <img src="/static/assets/img/imagen-spa4.jpg" class="w-100 d-block" alt="2">
+                    </div>
+
+                    <div class="carousel-item">
+                        <img src="/static/assets/img/imagen-spa2.jpg" class="w-100 d-block" alt="3">
+                    </div>
+
+                    <div class="carousel-item">
+                        <img src="/static/assets/img/imagen-spa5.jpg" class="w-100 d-block" alt="4">
+                    </div>
+
+                    <div class="carousel-item">
+                        <img src="/static/assets/img/imagen-spa3.jpg" class="w-100 d-block" alt="5">
+                    </div>
+                </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselDemo" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselDemo" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+
+                <div class="carousel-indicators">
+                    <button type="button" class="active" data-bs-target="#carouselDemo" data-bs-slide-to="0"
+                        aria-label="0">
+                        <img src="/static/assets/img/Depilacion2.jpeg" class="w-100" />
+                    </button>
+
+                    <button type="button" data-bs-target="#carouselDemo" data-bs-slide-to="1" aria-label="1">
+                        <img src="/static/assets/img/imagen-spa1.jpg" class="w-100" />
+                    </button>
+
+                    <button type="button" data-bs-target="#carouselDemo" data-bs-slide-to="2" aria-label="2">
+                        <img src="/static/assets/img/imagen-spa4.jpg" class="w-100" />
+                    </button>
+
+                    <button type="button" data-bs-target="#carouselDemo" data-bs-slide-to="3" aria-label="3">
+                        <img src="/static/assets/img/imagen-spa2.jpg" class="w-100" />
+                    </button>
+
+                    <button type="button" data-bs-target="#carouselDemo" data-bs-slide-to="4" aria-label="4">
+                        <img src="/static/assets/img/imagen-spa5.jpg" class="w-100" />
+                    </button>
+
+                    <button type="button" data-bs-target="#carouselDemo" data-bs-slide-to="5" aria-label="5">
+                        <img src="/static/assets/img/imagen-spa3.jpg" class="w-100" />
+                    </button>
+                </div>
             </div>
-            {% endfor %}
         </div>
-        <!-- Aquí irán tus imágenes -->
+
+        <div class="text-container">
+            <h5 id="slide-title">Tratamiento de Belleza Relajante con Láser</h5>
+            <p id="slide-description">
+                Un tratamiento facial avanzado, donde se combina la tecnología láser con el uso tradicional de rodajas de pepino para un efecto calmante en los ojos. Este procedimiento busca mejorar la piel del rostro, reduciendo imperfecciones y aportando un brillo natural, todo en un ambiente relajante y de bienestar.
+            </p>
+        </div>
     </div>
+
+    <script>
+        const titles = [
+            "Tratamiento de Belleza Relajante con Láser",
+            "Salon de la Naturaleza",
+            "Salon de Relajación Floral",
+            "Sala de Relajación Tropical",
+            "Sala de Lujo con Ambientes Acogedores y Vela Aromática",
+            "Sala de Relajación con Vista a la Naturaleza"
+        ];
+
+        const descriptions = [
+            "Un tratamiento facial avanzado, donde se combina la tecnología láser con el uso tradicional de rodajas de pepino para un efecto calmante en los ojos. Este procedimiento busca mejorar la piel del rostro, reduciendo imperfecciones y aportando un brillo natural, todo en un ambiente relajante y de bienestar.",
+            "Disfruta de un salon rodeado por la naturaleza, para conectar con ella y limpiar la mente del caos de la ciudad, donde el verde de las palantas que te rodean se funden con la paz que te genera el solo mirar alrededor",
+            "Disfruta de una experiencia única de relajación en nuestro Salon de Relajación Floral, donde la calidez de la luz natural y la elegancia de la decoración floral se combinan para crear un ambiente de paz. Rodeado de suaves cortinas, una variedad de velas aromáticas, y una decoración que incorpora delicadas flores, este espacio está diseñado para brindarte un respiro completo del estrés cotidiano, sumergiéndote en una atmósfera de serenidad y belleza.",
+            "Sumérgete en la tranquilidad de nuestra Sala de Relajación Tropical, un refugio íntimo inspirado en la naturaleza. Esta sala ofrece vistas exuberantes de un jardín tropical, con un diseño minimalista que resalta la belleza del entorno natural. El suave resplandor de las lámparas y la cuidada selección de plantas crean un ambiente de calma profunda, ideal para tratamientos que rejuvenecen tanto el cuerpo como el espíritu.",
+            "Un lujoso spa decorado con una abundancia de velas aromáticas, creando un ambiente cálido y acogedor. La suave iluminación y los elementos naturales, como las flores secas y la decoración minimalista, invitan al cliente a relajarse profundamente en este refugio de serenidad. La mesa de masajes está lista para ofrecer una experiencia revitalizante en un entorno cuidadosamente diseñado para promover la paz y el bienestar.",
+            "Un spa íntimo y sereno, donde la naturaleza se funde con el interior a través de grandes ventanales que ofrecen una vista exuberante del follaje verde. El ambiente es perfecto para una sesión de relajación profunda, rodeado de velas y plantas que intensifican la conexión con la naturaleza. Este espacio es ideal para quienes buscan un momento de tranquilidad en un entorno que revitaliza tanto el cuerpo como la mente."
+        ];
+
+        const carousel = document.querySelector('#carouselDemo');
+        const titleElement = document.getElementById('slide-title');
+        const descriptionElement = document.getElementById('slide-description');
+
+        carousel.addEventListener('slide.bs.carousel', (event) => {
+            const slideIndex = event.to;
+            titleElement.textContent = titles[slideIndex];
+            descriptionElement.textContent = descriptions[slideIndex];
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous">
+    </script>
 </body>
+
 </html>
