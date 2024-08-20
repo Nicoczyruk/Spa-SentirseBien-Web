@@ -1,40 +1,42 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from dotenv import load_dotenv
 import os
 import urllib
-import sqlalchemy
+from flask import Flask
+from sqlalchemy import create_engine
+from dotenv import load_dotenv
 
-db = SQLAlchemy()
+# Cargar variables de entorno desde .env
+load_dotenv()
 
+# Crear la aplicación Flask
+app = Flask(__name__)
+
+# Construir el string de conexión ODBC 18
+odbc_connection_string = (
+    f"DRIVER={{ODBC Driver 18 for SQL Server}};"
+    f"Server=tcp:spa-sentirse-bien-server.database.windows.net,1433;"
+    f"Database=SpaSentirseBienBD;"
+    f"Uid={os.getenv('DB_USER')};"
+    f"Pwd={os.getenv('DB_PASSWORD')};"
+    f"Encrypt=yes;"
+    f"TrustServerCertificate=no;"
+    f"Connection Timeout=30;"
+)
+
+# Crear la URL de conexión para SQLAlchemy
+connection_url = f"mssql+pyodbc:///?odbc_connect={urllib.parse.quote_plus(odbc_connection_string)}"
+
+# Configurar Flask y SQLAlchemy
+app.config['SQLALCHEMY_DATABASE_URI'] = connection_url
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+
+# Configurar el motor de SQLAlchemy
+engine = create_engine(connection_url)
+
+# Registrar las rutas
+from .routes import main
+app.register_blueprint(main)
+
+# La aplicación ahora está lista para manejar las solicitudes
 def create_app():
-    app = Flask(__name__)
-
-    # Cargar variables de entorno desde .env
-    load_dotenv()
-
-    # Construir la cadena de conexión
-    connection_string = os.getenv('SQLALCHEMY_DATABASE_URI')
-    odbc_connection_string = (
-        f"DRIVER={{ODBC Driver 18 for SQL Server}};"
-        f"Server=tcp:spa-sentirse-bien-server.database.windows.net,1433;"
-        f"Database=SpaSentirseBienBD;"
-        f"Uid={os.getenv('DB_USER')};"
-        f"Pwd={os.getenv('DB_PASSWORD')};"
-        f"Encrypt=yes;"
-        f"TrustServerCertificate=no;"
-        f"Connection Timeout=30;"
-    )
-
-    connection_url = f"mssql+pyodbc:///?odbc_connect={urllib.parse.quote_plus(odbc_connection_string)}"
-
-    app.config['SQLALCHEMY_DATABASE_URI'] = connection_url
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-
-    db.init_app(app)
-
-    from .routes import main
-    app.register_blueprint(main)
-
     return app

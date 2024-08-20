@@ -1,7 +1,12 @@
-from flask import Blueprint, render_template
-
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from app import app, engine
+from sqlalchemy.exc import SQLAlchemyError
+import logging
+from sqlalchemy import text
 
 main = Blueprint('main', __name__)
+# Configurar logging para debugging
+logging.basicConfig(level=logging.DEBUG)
 
 @main.route('/')
 def index():
@@ -60,7 +65,61 @@ def news():
 def jobs():
     return render_template('jobs.html')
 
-@main.route('/contact')
-def contact():
-    return render_template('contact.html')
+@app.route('/sql-test', methods=['GET', 'POST'])
+def sql_test():
+    usuarios = []
+    try:
+        with engine.connect() as connection:
+            if request.method == 'POST':
+                # Crear usuario
+                if 'create_user' in request.form:
+                    nombre_usuario = request.form.get('nombre_usuario')
+                    password = request.form.get('password')
+                    email = request.form.get('email')
+                    if nombre_usuario and password and email:
+                        connection.execute(
+                            text("INSERT INTO usuarios (nombre_usuario, password, email) VALUES (:nombre_usuario, :password, :email)"),
+                            {"nombre_usuario": nombre_usuario, "password": password, "email": email}
+                        )
+                        connection.commit()
+                        flash('Usuario creado exitosamente', 'success')
+                    else:
+                        flash('Todos los campos son obligatorios', 'danger')
 
+                # Modificar usuario
+                elif 'modify_user' in request.form:
+                    id_usuario = request.form.get('id_usuario')
+                    new_nombre_usuario = request.form.get('new_nombre_usuario')
+                    new_email = request.form.get('new_email')
+                    connection.execute(
+                        text("UPDATE usuarios SET nombre_usuario = :new_nombre_usuario, email = :new_email WHERE id_usuario = :id_usuario"),
+                        {"new_nombre_usuario": new_nombre_usuario, "new_email": new_email, "id_usuario": id_usuario}
+                    )
+                    connection.commit()
+                    flash('Usuario modificado exitosamente', 'success')
+
+                # Eliminar usuario
+                elif 'delete_user' in request.form:
+                    id_usuario = request.form.get('id_usuario')
+                    connection.execute(
+                        text("DELETE FROM usuarios WHERE id_usuario = :id_usuario"),
+                        {"id_usuario": id_usuario}
+                    )
+                    connection.commit()
+                    flash('Usuario eliminado exitosamente', 'success')
+            # Si no hay POST o no se hizo 'load_users', cargar usuarios por defecto
+            if not usuarios:
+                result = connection.execute(text("SELECT * FROM usuarios"))
+                usuarios = result.fetchall()
+
+        return render_template('sql_test.html', title='SQL Test', usuarios=usuarios)
+
+    except SQLAlchemyError as e:
+        logging.error(f"Error al ejecutar la consulta SQL: {e}")
+        flash(f"Ocurrió un error al ejecutar la consulta: {str(e)}", 'danger')
+        return redirect(url_for('sql_test'))
+
+    except Exception as e:
+        logging.error(f"Error inesperado: {e}")
+        flash(f"Ocurrió un error inesperado: {str(e)}", 'danger')
+        return redirect(url_for('sql_test'))
