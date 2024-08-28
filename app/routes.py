@@ -1,4 +1,8 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, request, jsonify, session
+from flask_login import login_user, login_required, logout_user, current_user, UserMixin, LoginManager
+import pyodbc
+from werkzeug.security import check_password_hash, generate_password_hash
+from . import odbc_connection_string
 from app import app, engine
 from sqlalchemy.exc import SQLAlchemyError
 import logging
@@ -7,6 +11,43 @@ from sqlalchemy import text
 main = Blueprint('main', __name__)
 # Configurar logging para debugging
 logging.basicConfig(level=logging.DEBUG)
+
+class User(UserMixin):
+    def __init__(self, id, nombre_usuario, email, rol):
+        self.id = id
+        self.nombre_usuario = nombre_usuario
+        self.email = email
+        self.rol = rol
+
+    def get_id(self):
+        return str(self.id)
+
+    @property
+    def is_active(self):
+        return True
+
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False
+
+login_manager = LoginManager()
+login_manager.init_app(app)  # Asegúrate de que esto se haga en la creación de la aplicación
+
+@login_manager.user_loader
+def load_user(user_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id_usuario, nombre_usuario, email, rol FROM usuarios WHERE id_usuario = ?", user_id)
+    user = cursor.fetchone()
+    conn.close()
+    
+    if user:
+        return User(id=user[0], nombre_usuario=user[1], email=user[2], rol=user[3])
+    return None
 
 @main.route('/')
 def index():
@@ -123,3 +164,71 @@ def sql_test():
         logging.error(f"Error inesperado: {e}")
         flash(f"Ocurrió un error inesperado: {str(e)}", 'danger')
         return redirect(url_for('sql_test'))
+
+def get_db_connection():
+    conn = pyodbc.connect(odbc_connection_string)
+    return conn
+
+@app.route('/login', methods=['POST'])
+def login():
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id_usuario, nombre_usuario, email, password, rol FROM usuarios WHERE email = ?", email)
+    user = cursor.fetchone()
+    conn.close()
+
+    if user and check_password_hash(user[3], password):
+        # Crear una instancia de User usando los datos recuperados
+        user_obj = User(id=user[0], nombre_usuario=user[1], email=user[2], rol=user[4])
+        login_user(user_obj)
+
+        #session
+        session.permanent = True
+
+        return jsonify({'success': True, 'message': 'Login successful'})
+    else:
+        return jsonify({'success': False, 'message': 'Invalid credentials'})
+    
+@app.route('/logout', methods=['POST'])
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('main.index'))
+
+@app.route('/register', methods=['POST'])
+def register():
+    data = request.json
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Inserta el nuevo cliente
+        cursor.execute("""
+            INSERT INTO clientes (nombre, apellido, email, telefono, direccion)
+            VALUES (?, ?, ?, ?, ?);
+        """, (data['nombre'], data['apellido'], data['email'], data['telefono'], data['direccion']))
+        
+        conn.commit()
+
+        # Obtener el ID del cliente recién insertado usando el email
+        cursor.execute("SELECT id_cliente FROM clientes WHERE email = ?", data['email'])
+        id_cliente = cursor.fetchone()[0]
+
+        # Hashear la contraseña
+        hashed_password = generate_password_hash(data['password'])
+
+        # Crear el usuario vinculado al cliente con el rol de "Cliente"
+        cursor.execute("""
+            INSERT INTO usuarios (id_cliente, nombre_usuario, password, email, rol)
+            VALUES (?, ?, ?, ?, ?);
+        """, (id_cliente, data['nombre_usuario'], hashed_password, data['email'], 'Cliente'))
+
+        conn.commit()
+        conn.close()
+
+        return jsonify({'success': True, 'message': 'Registration successful'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})

@@ -3,12 +3,20 @@ import urllib
 from flask import Flask
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
+from flask_login import LoginManager
+from datetime import timedelta
 
 # Cargar variables de entorno desde .env
 load_dotenv()
 
 # Crear la aplicación Flask
 app = Flask(__name__)
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+# Configuración de la duración de la sesión
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)  # Ajusta el tiempo que desees
+app.config['SESSION_PERMANENT'] = True
 
 # Construir el string de conexión ODBC 18
 odbc_connection_string = (
