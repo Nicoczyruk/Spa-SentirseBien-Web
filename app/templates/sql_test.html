@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <!-- Incluye Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="container mt-4">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    <div class="container my-5">
+        <div class="mt-4">
+            <a href="{{ url_for('main.index') }}" class="btn btn-secondary">Volver al Inicio</a>
+        </div>
+        <h1 class="text-center">{{ title }}</h1>
+        <p class="text-center">Pruebas de consultas SQL directamente desde la web.</p>
+
+        <!-- Botón para cargar la tabla de usuarios -->
+        <form method="POST" class="mb-4">
+            <button type="submit" class="btn btn-primary" name="load_users">Cargar Usuarios</button>
+        </form>
+
+        <!-- Formulario para crear usuario -->
+        <form method="POST" class="mb-4">
+            <h2>Crear Usuario</h2>
+            <div class="mb-3">
+                <label for="nombre_usuario" class="form-label">Nombre de Usuario</label>
+                <input type="text" class="form-control" id="nombre_usuario" name="nombre_usuario" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <button type="submit" class="btn btn-primary" name="create_user">Crear Usuario</button>
+        </form>
+
+        <!-- Tabla de usuarios -->
+        <h2>Usuarios Registrados</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre de Usuario</th>
+                    <th>Email</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in usuarios %}
+                <tr>
+                    <td>{{ usuario.id_usuario }}</td>
+                    <td>{{ usuario.nombre_usuario }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td>
+                        <form method="POST" style="display:inline;">
+                            <input type="hidden" name="id_usuario" value="{{ usuario.id_usuario }}">
+                            <button type="submit" class="btn btn-danger" name="delete_user">Eliminar</button>
+                        </form>
+                        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modifyModal{{ usuario.id_usuario }}">Modificar</button>
+
+                        <!-- Modal para modificar usuario -->
+                        <div class="modal fade" id="modifyModal{{ usuario.id_usuario }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Modificar Usuario</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form method="POST">
+                                        <div class="modal-body">
+                                            <input type="hidden" name="id_usuario" value="{{ usuario.id_usuario }}">
+                                            <div class="mb-3">
+                                                <label for="new_nombre_usuario" class="form-label">Nuevo Nombre de Usuario</label>
+                                                <input type="text" class="form-control" id="new_nombre_usuario" name="new_nombre_usuario" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="new_email" class="form-label">Nuevo Email</label>
+                                                <input type="email" class="form-control" id="new_email" name="new_email" required>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary" name="modify_user">Guardar Cambios</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center">No se encontraron usuarios.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Incluye Bootstrap JS y dependencias de Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
