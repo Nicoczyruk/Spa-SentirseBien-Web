@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Galería - Sentirse Bien</title>
     <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/gallery.css') }}" rel="stylesheet" />
 </head>
 
 <body>
@@ -43,88 +44,6 @@
             <a class="btn btn-primary" href="#signup">Sign Up</a>
         </div>
     </nav>
-
-    <style>
-        .carousel-container {
-            display: flex;
-            margin-top: 1%;
-            margin-left: 20%;
-            margin-right: auto;
-            margin-bottom: 1%;
-        }
-
-        .carousel-cont {
-            width: 500px;
-            height: 500px;
-            position: relative;
-        }
-
-        .carousel-indicators {           
-            top: 45%;
-            left: -620px;
-            transform: translateY(-47%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: absolute;
-            justify-content: space-around;
-            height: 65%;
-            z-index: 10;
-        }
-
-        .carousel-indicators button {
-            transition: transform 0.3s ease; 
-        }
-
-        .carousel-indicators button:hover {
-            transform: scale(1.1); 
-        }
-
-        .carousel-indicators img {
-            transition: transform 0.3s ease; 
-        }
-
-        .carousel-indicators img {
-            width: 100px;
-            height: 30px;
-            display: flex;
-            border-radius: 1%;
-            margin-bottom: 10px;
-        }
-
-        .carousel-indicators button {
-            background-color: transparent;
-            border: none;
-            padding: 0;
-        }
-
-        .carousel-inner img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 3%;
-        }
-
-        .text-container {
-            margin-left: 20px;
-            max-width: 300px;
-        }
-
-        .text-container h5 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-        }
-
-        .text-container p {
-            font-size: 1rem;
-            color: #333;
-        }
-
-        .carousel-control-prev,
-        .carousel-control-next {
-            width: 40px;
-            z-index: 15;
-        }
-    </style>
 
     <div class="carousel-container">
         <div class="carousel-cont">
