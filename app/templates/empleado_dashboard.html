@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Empleado Dashboard - SPA Sentirse Bien
+{% endblock %}
+
+{% block styles %}
+    <link href="{{ url_for('static', filename='css/empleado_dashboard.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4">Empleado Dashboard</h2>
+
+    <!-- Sección de Consultas de Clientes -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Consultas de Clientes
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Email</th>
+                        <th>Título de la Consulta</th>
+                        <th>Fecha</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for consulta in consultas %}
+                    <tr>
+                        <td>{{ consulta[1] }} {{ consulta[2] }}</td>
+                        <td>{{ consulta[3] }}</td>
+                        <td>{{ consulta[4] }}</td>
+                        <td>{{ consulta[6] }}</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" onclick="openResponseModal('{{ consulta[0] }}', '{{ consulta[5] }}')">Responder</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal para Responder Consultas -->
+    <div class="modal fade" id="responseModal" tabindex="-1" aria-labelledby="responseModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="responseModalLabel">Responder Consulta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="responseForm">
+                        <input type="hidden" id="consultaId" name="consultaId">
+                        <div class="mb-3">
+                            <label for="mensajeConsulta" class="form-label">Mensaje del Cliente</label>
+                            <textarea class="form-control" id="mensajeConsulta" name="mensajeConsulta" rows="4" readonly></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="respuesta" class="form-label">Respuesta</label>
+                            <textarea class="form-control" id="respuesta" name="respuesta" rows="4" required></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary btn-block" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary btn-block">Enviar Respuesta</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block empleado_dashboard_scripts %}
+<script src="{{ url_for('static', filename='js/empleado_dashboard.js') }}"></script>
+{% endblock %}

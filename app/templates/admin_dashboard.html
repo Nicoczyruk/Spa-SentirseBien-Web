@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Admin Dashboard - SPA Sentirse Bien
+{% endblock %}
+
+{% block styles %}
+    <link href="{{ url_for('static', filename='css/admin_dashboard.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4">Admin Dashboard</h2>
+
+    <!-- Sección de generación de empleados -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Generar Usuario Empleado
+        </div>
+        <div class="card-body">
+            <button id="generateEmployeeBtn" class="btn btn-primary">Generar Usuario Empleado</button>
+            <div id="generatedEmployee" class="mt-3" style="display:none;">
+                <p><strong>Nombre de Usuario:</strong> <span id="generatedUsername"></span></p>
+                <p><strong>Correo Electrónico:</strong> <span id="generatedEmail"></span></p> <!-- Mostrar correo electrónico -->
+                <p><strong>Contraseña:</strong> <span id="generatedPassword"></span></p>
+                <button id="confirmEmployeeBtn" class="btn btn-success">Confirmar Empleado</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de monitoreo de la página -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Monitoreo de la Página
+        </div>
+        <div class="card-body">
+            <p><strong>Total de Usuarios Registrados (Clientes):</strong> {{ total_clients }}</p>
+        </div>
+    </div>
+
+    <!-- Sección de lista de empleados -->
+    <div class="card">
+        <div class="card-header">
+            Lista de Empleados
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nombre de Usuario</th>
+                        <th>Email</th>
+                        <th>Contraseña (Protegida)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for employee in employees %}
+                    <tr>
+                        <td>{{ employee.nombre_usuario }}</td>
+                        <td>{{ employee.email }}</td>
+                        <td>********</td>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block admin_dashboard_scripts %}
+    <script src="{{ url_for('static', filename='js/admin_dashboard.js') }}"></script>
+{% endblock %}

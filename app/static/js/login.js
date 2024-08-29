@@ -32,6 +32,9 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
             if (backdrop) {
                 backdrop.remove();
             }
+
+            // Recargar la página para actualizar el menú
+            window.location.reload();
         } else {
             // Mostrar ventana emergente de error
             alert('Login failed: ' + data.message);

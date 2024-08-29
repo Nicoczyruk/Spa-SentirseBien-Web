@@ -72,12 +72,14 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end text-small" aria-labelledby="dropdownUser">
                         <li><a class="dropdown-item" href="{{ url_for('perfil') }}">Mi perfil</a></li>
-                        {% if current_user.rol == 'Cliente' %}
+                        {% if current_user.rol == 'Cliente' or current_user.rol == 'Administrador' %}
                         <li><a class="dropdown-item" href="{{ url_for('consulta') }}">Consulta</a></li>
-                        {% elif current_user.rol == 'Administrador' %}
-                        <li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a></li>
-                        {% elif current_user.rol == 'Empleado' %}
+                        {% endif %}
+                        {% if current_user.rol == 'Empleado' or current_user.rol == 'Administrador' %}
                         <li><a class="dropdown-item" href="{{ url_for('empleado_dashboard') }}">Empleado Dashboard</a></li>
+                        {% endif %}
+                        {% if current_user.rol == 'Administrador' %}
+                        <li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a></li>
                         {% endif %}
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="#" id="logoutButton">Salir</a></li>
@@ -211,6 +213,8 @@
     <script src="{{ url_for('static', filename='js/register.js') }}"></script>
     <script src="{{ url_for('static', filename='js/logout.js') }}"></script>
     <script src="{{ url_for('static', filename='js/session_check.js') }}"></script>
+    {% block empleado_dashboard_scripts %}{% endblock %}
+    {% block admin_dashboard_scripts %}{% endblock %}
     <!-- Añadir aquí el script directamente -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {

@@ -257,36 +257,128 @@ def perfil():
     else:
         return "No se encontraron datos del cliente", 404
     
+from flask import redirect, url_for, flash
+
 @app.route('/consulta', methods=['GET', 'POST'])
 @login_required  # Asegura que el usuario esté logueado
 def consulta():
     if request.method == 'POST':
+        nombre = request.form['nombre']  # El nombre se extrae del formulario
         email = request.form['email']
         titulo = request.form['titulo']
         mensaje = request.form['mensaje']
 
-        # Guardar la consulta en la base de datos o enviar por correo
+        # Guardar la consulta en la base de datos
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO consultas (email, titulo, mensaje, id_cliente) VALUES (?, ?, ?, ?)", 
-                       (email, titulo, mensaje, current_user.id_cliente))
+        cursor.execute("INSERT INTO consultas (nombre, email, tituloConsulta, mensaje) VALUES (?, ?, ?, ?)", 
+                       (nombre, email, titulo, mensaje))
         conn.commit()
         conn.close()
 
-        return "Consulta enviada con éxito", 200
+        # Redirigir a la página de consulta con un mensaje de éxito
+        return redirect(url_for('consulta', success=True))
     
-    return render_template('consulta.html')
+    return render_template('consulta.html', success=request.args.get('success'))
 
-#EN PROGRESO - LO TERMINO CUANDO PUEDA 
+
 
 @app.route('/admin_dashboard')
 @login_required
 def admin_dashboard():
-    # Lógica para el dashboard del administrador
-    pass
+    if current_user.rol != 'Administrador':
+        return redirect(url_for('main.index'))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Monitoreo - Contar cantidad de clientes
+    cursor.execute("SELECT COUNT(*) FROM usuarios WHERE rol = 'Cliente'")
+    total_clients = cursor.fetchone()[0]
+
+    # Obtener lista de empleados
+    cursor.execute("SELECT nombre_usuario, email FROM usuarios WHERE rol = 'Empleado'")
+    employees = cursor.fetchall()
+
+    conn.close()
+
+    return render_template('admin_dashboard.html', total_clients=total_clients, employees=employees)
+
+@app.route('/create_employee', methods=['POST'])
+@login_required
+def create_employee():
+    if current_user.rol != 'Administrador':
+        return jsonify({'success': False, 'message': 'No autorizado'})
+
+    data = request.get_json()
+    username = data.get('username')
+    password = generate_password_hash(data.get('password'))
+    email = f'{username}@spasentirsebien.com'  # Generar un email único basado en el nombre de usuario
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("INSERT INTO usuarios (nombre_usuario, email, password, rol) VALUES (?, ?, ?, 'Empleado')",
+                       (username, email, password))
+        conn.commit()
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+    finally:
+        conn.close()
 
 @app.route('/empleado_dashboard')
 @login_required
 def empleado_dashboard():
-    # Lógica para el dashboard del empleado
-    pass
+    if current_user.rol not in ['Empleado', 'Administrador']:
+        return redirect(url_for('main.index'))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Obtener las consultas de los clientes (haciendo un JOIN con clientes para obtener el nombre y apellido)
+    cursor.execute("""
+    SELECT q.id_consulta, c.nombre, c.apellido, q.email, q.tituloConsulta, q.mensaje, q.fecha
+    FROM consultas q
+    LEFT JOIN clientes c ON q.email = c.email
+    ORDER BY q.fecha DESC
+    """)
+    consultas = cursor.fetchall()
+
+    # Obtener los mensajes de empleo (filtrando por "CV" en el título)
+    cursor.execute("""
+        SELECT c.nombre, c.apellido, q.email, q.tituloConsulta, q.mensaje, q.fecha
+        FROM consultas q
+        LEFT JOIN clientes c ON q.email = c.email
+        WHERE q.tituloConsulta LIKE '%CV%'
+        ORDER BY q.fecha DESC
+    """)
+    empleos = cursor.fetchall()
+
+    conn.close()
+
+    return render_template('empleado_dashboard.html', consultas=consultas, empleos=empleos)
+
+@app.route('/responder_consulta', methods=['POST'])
+@login_required
+def responder_consulta():
+    try:
+        consulta_id = request.form.get('consultaId')
+        print(consulta_id)
+        respuesta = request.form.get('respuesta')
+
+        if not consulta_id or not respuesta:
+            return jsonify({'success': False, 'message': 'Datos incompletos'})
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Eliminar la consulta de la base de datos después de responder
+        cursor.execute("DELETE FROM consultas WHERE id_consulta = ?", (consulta_id,))
+        conn.commit()
+        conn.close()
+
+        return jsonify({'success': True})
+    except Exception as e:
+        print(f"Error al responder consulta: {str(e)}")
+        return jsonify({'success': False, 'message': 'Error interno del servidor'}), 500
