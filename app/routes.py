@@ -41,7 +41,7 @@ login_manager.init_app(app)  # Asegúrate de que esto se haga en la creación de
 def load_user(user_id):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT id_usuario, nombre_usuario, email, rol FROM usuarios WHERE id_usuario = ?", user_id)
+    cursor.execute("SELECT id_usuario, nombre_usuario, email, rol FROM usuarios WHERE id_usuario = ?", (user_id,))
     user = cursor.fetchone()
     conn.close()
     
@@ -100,7 +100,7 @@ def services():
 
 @main.route('/news')
 def news():
-    return render_template('news.html')
+    return render_template('news.html', title = 'Noticias')
 
 @main.route('/jobs')
 def jobs():
@@ -176,27 +176,36 @@ def login():
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT id_usuario, nombre_usuario, email, password, rol FROM usuarios WHERE email = ?", email)
+    cursor.execute("SELECT id_usuario, nombre_usuario, email, password, rol FROM usuarios WHERE email = ?", (email,))
     user = cursor.fetchone()
     conn.close()
 
     if user and check_password_hash(user[3], password):
-        # Crear una instancia de User usando los datos recuperados
         user_obj = User(id=user[0], nombre_usuario=user[1], email=user[2], rol=user[4])
-        login_user(user_obj)
+        login_user(user_obj)  # Esto debería guardar el user_id en la sesión
 
-        #session
-        session.permanent = True
+        session.permanent = True  # Asegura que la sesión sea permanente
 
-        return jsonify({'success': True, 'message': 'Login successful'})
+        print(f"User logged in with ID: {user_obj.get_id()}")
+        print(f"Session contents: {session.items()}")
+
+        return jsonify({'success': True, 'message': 'Login successful', 'username': user[1]})
     else:
         return jsonify({'success': False, 'message': 'Invalid credentials'})
     
+@app.route('/check_session', methods=['GET'])
+def check_session():
+    if current_user.is_authenticated:
+        return jsonify({'logged_in': True, 'username': current_user.nombre_usuario})
+    else:
+        return jsonify({'logged_in': False})
+
 @app.route('/logout', methods=['POST'])
 @login_required
 def logout():
-    logout_user()
-    return redirect(url_for('main.index'))
+    logout_user()  # Elimina la sesión del usuario
+    session.clear()  # Limpia toda la información de la sesión
+    return jsonify({'success': True})
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -232,3 +241,52 @@ def register():
         return jsonify({'success': True, 'message': 'Registration successful'})
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
+    
+@app.route('/perfil')
+@login_required  # Asegura que el usuario esté logueado
+def perfil():
+    user_id = current_user.id
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM clientes WHERE id_cliente = (SELECT id_cliente FROM usuarios WHERE id_usuario = ?)", (user_id,))
+    client_data = cursor.fetchone()
+    conn.close()
+
+    if client_data:
+        return render_template('perfil.html', client=client_data)
+    else:
+        return "No se encontraron datos del cliente", 404
+    
+@app.route('/consulta', methods=['GET', 'POST'])
+@login_required  # Asegura que el usuario esté logueado
+def consulta():
+    if request.method == 'POST':
+        email = request.form['email']
+        titulo = request.form['titulo']
+        mensaje = request.form['mensaje']
+
+        # Guardar la consulta en la base de datos o enviar por correo
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO consultas (email, titulo, mensaje, id_cliente) VALUES (?, ?, ?, ?)", 
+                       (email, titulo, mensaje, current_user.id_cliente))
+        conn.commit()
+        conn.close()
+
+        return "Consulta enviada con éxito", 200
+    
+    return render_template('consulta.html')
+
+#EN PROGRESO - LO TERMINO CUANDO PUEDA 
+
+@app.route('/admin_dashboard')
+@login_required
+def admin_dashboard():
+    # Lógica para el dashboard del administrador
+    pass
+
+@app.route('/empleado_dashboard')
+@login_required
+def empleado_dashboard():
+    # Lógica para el dashboard del empleado
+    pass

@@ -10964,3 +10964,11 @@ footer.footer {
 .custom-text-color {
   color: #000; /* Color específico para el texto */
 }
+
+#dropdownUser:focus, 
+#dropdownUser:hover, 
+#dropdownUser:active {
+    outline: none;
+    box-shadow: none;
+    background-color: transparent; /* Esto asegura que no haya un cambio de color de fondo */
+}

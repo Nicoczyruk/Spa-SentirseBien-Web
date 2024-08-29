@@ -1,84 +1,40 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Enlace al archivo CSS específico para la página de empleo -->
+{% extends "base.html" %}
+
+{% block title %}Empleo - SPA Sentirse Bien{% endblock %}
+
+<!--Esto enlaza el .css respectivo para aplicarlo a esta pagina-->
+{% block styles %}
     <link href="{{ url_for('static', filename='css/jobs.css') }}" rel="stylesheet">
-    <title>Empleo - SPA Sentirse Bien</title>
-</head>
-<body>
-    <!-- Navigation-->
-    <nav class="navbar navbar-expand-lg" style="background-color: #e9ffc7;">
-        <div class="container-fluid">
-            <!-- Título del spa -->
-            <a class="navbar-brand" href="/">
-                <img src="/static/assets/img/logo.png" alt="LOGO" style="width: 50px; height: 30px; margin-right: 8px;">
-                Sentirse Bien
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ url_for('main.index') }}">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.gallery') }}">Galería</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.about') }}">Sobre Nosotros</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.services') }}">Servicios</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.news') }}">Noticias</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.jobs') }}">Empleo</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('sql_test') }}">SQL Test</a>
-                    </li>
+{% endblock %}
 
-                </ul>
-                <!-- Botones de inicio de sesión y registro -->
-                <a class="btn btn-outline-primary mx-2" href="#login">Log In</a>
-                <a class="btn btn-primary" href="#signup">Sign Up</a>
-            </div>
-        </div>
-    </nav>
-
+{% block content %}
     <!-- Sección de Empleo -->
     <div class="container my-5 employment-section">
         <h1 class="text-center mb-4">¿Estás interesado en trabajar con nosotros? ¡Envíanos tu CV!</h1>
 
-        <form action="/submit-job-application" method="post" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label for="email" class="form-label">Correo Electrónico</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="nombre@ejemplo.com" required>
-            </div>
+        <!-- Contenedor con borde redondeado -->
+        <div class="card shadow-sm p-4 mb-5 bg-white rounded">
+            <form action="/submit-job-application" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Correo Electrónico</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="nombre@ejemplo.com" required>
+                </div>
 
-            <div class="mb-3">
-                <label for="cv" class="form-label">Sube tu CV</label>
-                <input type="file" class="form-control" id="cv" name="cv" accept=".pdf,.doc,.docx" required>
-                <small class="form-text text-muted">Formatos aceptados: PDF, DOC, DOCX</small>
-            </div>
+                <div class="mb-3">
+                    <label for="cv" class="form-label">Sube tu CV</label>
+                    <input type="file" class="form-control" id="cv" name="cv" accept=".pdf,.doc,.docx" required>
+                    <small class="form-text text-muted">Formatos aceptados: PDF, DOC, DOCX</small>
+                </div>
 
-            <div class="mb-3">
-                <label for="message" class="form-label">Contanos acerca de vos</label>
-                <textarea class="form-control" id="message" name="message" rows="5" placeholder="Cuéntanos sobre tus habilidades, experiencia y por qué te gustaría trabajar con nosotros." required></textarea>
-            </div>
+                <div class="mb-3">
+                    <label for="message" class="form-label">Contanos acerca de vos</label>
+                    <textarea class="form-control" id="message" name="message" rows="5" placeholder="Cuéntanos sobre tus habilidades, experiencia y por qué te gustaría trabajar con nosotros." required></textarea>
+                </div>
 
-            <button type="submit" class="btn btn-primary">Enviar</button>
-        </form>
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </form>
+        </div>
 
         <p class="mt-4">Los candidatos pasarán por un proceso de selección donde evaluaremos sus habilidades y experiencia. Nos pondremos en contacto contigo si tu perfil se ajusta a nuestras necesidades.</p>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+{% endblock %}

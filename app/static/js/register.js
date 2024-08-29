@@ -25,7 +25,11 @@ document.getElementById('registerForm').addEventListener('submit', function(even
             const modal = document.getElementById('registerModal');
             const modalInstance = bootstrap.Modal.getInstance(modal);
             modalInstance.hide();
-
+            // Asegura que el backdrop (fondo oscuro) se elimine
+            const backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) {
+                backdrop.remove();
+            }
             alert('Registro exitoso, ahora puedes iniciar sesión.');
         } else {
             // Mostrar el mensaje de error

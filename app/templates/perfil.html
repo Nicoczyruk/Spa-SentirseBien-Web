@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Mi Perfil - SPA Sentirse Bien
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4">Mi Perfil</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Información del Cliente
+                </div>
+                <div class="card-body">
+                    <p><strong>Nombre:</strong> {{ client[1] }} {{ client[2] }}</p>
+                    <p><strong>Email:</strong> {{ client[3] }}</p>
+                    <p><strong>Teléfono:</strong> {{ client[4] }}</p>
+                    <p><strong>Dirección:</strong> {{ client[5] }}</p>
+                    <!-- Agrega más campos según sea necesario -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

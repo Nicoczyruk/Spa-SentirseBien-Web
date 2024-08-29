@@ -1,5 +1,3 @@
-// static/js/login.js
-
 document.getElementById('loginForm').addEventListener('submit', function(event) {
     event.preventDefault();
 
@@ -27,6 +25,13 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
 
             // Mostrar ícono de usuario
             document.getElementById('userDropdown').style.display = 'block';
+            document.getElementById('usernameDisplay').textContent = data.username;
+
+            // Asegura que el backdrop (fondo oscuro) se elimine
+            const backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) {
+                backdrop.remove();
+            }
         } else {
             // Mostrar ventana emergente de error
             alert('Login failed: ' + data.message);

@@ -18,6 +18,12 @@ login_manager.init_app(app)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)  # Ajusta el tiempo que desees
 app.config['SESSION_PERMANENT'] = True
 
+# encriptacion de las cookies
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.config['SESSION_COOKIE_SECURE'] = True  # Solo envía cookies a través de HTTPS
+app.config['SESSION_COOKIE_HTTPONLY'] = True  # Evita el acceso a las cookies desde JavaScript
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # Evita CSRF en la mayoría de los casos
+
 # Construir el string de conexión ODBC 18
 odbc_connection_string = (
     f"DRIVER={{ODBC Driver 18 for SQL Server}};"
