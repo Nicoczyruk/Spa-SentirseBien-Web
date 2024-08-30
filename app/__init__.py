@@ -5,12 +5,19 @@ from sqlalchemy import create_engine
 from dotenv import load_dotenv
 from flask_login import LoginManager
 from datetime import timedelta
-
+import datetime
 # Cargar variables de entorno desde .env
 load_dotenv()
 
 # Crear la aplicación Flask
 app = Flask(__name__)
+
+@app.template_filter('datetimeformat')
+def datetimeformat(value, format='%H:%M %p'):
+    if isinstance(value, datetime.time):
+        return value.strftime(format)
+    return value
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 

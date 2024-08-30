@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Mis Turnos - SPA Sentirse Bien
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4">Mis Turnos</h2>
+    <div class="card">
+        <div class="card-body">
+            {% if turnos %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Servicio</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for turno in turnos %}
+                    <tr>
+                        <td>{{ turno[0] }}</td>
+                        <td>{{ turno[1] }}</td>
+                        <td>{{ turno[2] | datetimeformat }}</td>
+                        <td>{{ turno[3] }}</td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmarCancelacion('{{ turno[4] }}')">Cancelar</button>
+                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modificarTurnoModal" data-turno-id="{{ turno[4] }}" data-fecha="{{ turno[1] }}" data-hora="{{ turno[2] }}" {% if turno[5] == 0 %}disabled{% endif %}>Modificar</button>
+                        </td>                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No tienes turnos agendados.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Modificar Turno -->
+<div class="modal fade" id="modificarTurnoModal" tabindex="-1" aria-labelledby="modificarTurnoLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modificarTurnoLabel">Modificar Turno</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="modificarTurnoForm" method="POST">
+                    <input type="hidden" id="turnoId" name="turno_id">
+                    <div class="mb-3">
+                        <label for="fecha" class="form-label">Fecha</label>
+                        <input type="date" class="form-control" id="fecha" name="fecha" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="hora" class="form-label">Hora</label>
+                        <input type="time" class="form-control" id="hora" name="hora" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Confirmar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block turnos_scripts %}
+<script src="{{ url_for('static', filename='js/turnos.js') }}"></script>
+{% endblock %}
+
+

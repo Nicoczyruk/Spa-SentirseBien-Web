@@ -7,6 +7,7 @@ from app import app, engine
 from sqlalchemy.exc import SQLAlchemyError
 import logging
 from sqlalchemy import text
+from datetime import datetime, timedelta
 
 main = Blueprint('main', __name__)
 # Configurar logging para debugging
@@ -382,3 +383,107 @@ def responder_consulta():
     except Exception as e:
         print(f"Error al responder consulta: {str(e)}")
         return jsonify({'success': False, 'message': 'Error interno del servidor'}), 500
+
+@app.route('/mis_turnos')
+@login_required
+def mis_turnos():
+    if current_user.rol not in ['Cliente', 'Administrador']:
+        return redirect(url_for('main.index'))
+    
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT s.nombre, t.fecha, t.hora, t.estado, t.id_turno
+        FROM turnos t
+        JOIN servicios s ON t.id_servicio = s.id_servicio
+        WHERE t.id_cliente = (SELECT id_cliente FROM usuarios WHERE id_usuario = ?)
+        ORDER BY t.fecha, t.hora
+    """, (current_user.id,))
+    turnos = cursor.fetchall()
+    conn.close()
+
+    return render_template('mis_turnos.html', turnos=turnos)
+
+
+@app.route('/elegir_turno/<int:servicio_id>', methods=['GET', 'POST'])
+@login_required
+def elegir_turno(servicio_id):
+    if current_user.rol not in ['Cliente', 'Administrador']:
+        return redirect(url_for('main.index'))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+        # Obtener los datos del formulario
+        fecha = request.form.get('fecha')
+        hora = request.form.get('hora')
+
+        # Insertar el turno en la base de datos
+        cursor.execute("""
+            INSERT INTO turnos (fecha, hora, id_cliente, id_servicio, estado)
+            VALUES (?, ?, (SELECT id_cliente FROM usuarios WHERE id_usuario = ?), ?, 'Pendiente')
+        """, (fecha, hora, current_user.id, servicio_id))
+        conn.commit()
+        conn.close()
+
+        # Redirigir al usuario a la página de "Mis Turnos"
+        return redirect(url_for('mis_turnos'))
+    
+    # Si el método es GET, mostrar la página para elegir turno
+    cursor.execute("SELECT nombre, duracion, precio FROM servicios WHERE id_servicio = ?", (servicio_id,))
+    servicio = cursor.fetchone()
+    conn.close()
+
+    return render_template('elegir_turno.html', servicio=servicio, servicio_id=servicio_id)
+
+@app.route('/cancelar_turno/<int:turno_id>', methods=['POST'])
+@login_required
+def cancelar_turno(turno_id):
+    if current_user.rol not in ['Cliente', 'Administrador']:
+        return redirect(url_for('main.index'))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Eliminar el turno
+    cursor.execute("DELETE FROM turnos WHERE id_turno = ? AND id_cliente = (SELECT id_cliente FROM usuarios WHERE id_usuario = ?)", (turno_id, current_user.id))
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for('mis_turnos'))
+
+
+@app.route('/modificar_turno/<int:turno_id>', methods=['POST'])
+@login_required
+def modificar_turno(turno_id):
+    if current_user.rol not in ['Cliente', 'Administrador']:
+        return redirect(url_for('main.index'))
+
+    nueva_fecha = request.form['fecha']
+    nueva_hora = request.form['hora']
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT fecha, hora FROM turnos WHERE id_turno = ? AND id_cliente = (SELECT id_cliente FROM usuarios WHERE id_usuario = ?)", (turno_id, current_user.id))
+    turno = cursor.fetchone()
+
+    # turno[0] ya es un objeto datetime.date y turno[1] ya es un objeto datetime.time
+    turno_datetime = datetime.combine(turno[0], turno[1])
+    if turno_datetime < datetime.now() + timedelta(hours=24):
+        conn.close()
+        flash('No puedes modificar un turno con menos de 24 horas de antelación.', 'danger')
+        return redirect(url_for('mis_turnos'))
+
+    cursor.execute("""
+        UPDATE turnos
+        SET fecha = ?, hora = ?
+        WHERE id_turno = ? AND id_cliente = (SELECT id_cliente FROM usuarios WHERE id_usuario = ?)
+    """, (nueva_fecha, nueva_hora, turno_id, current_user.id))
+    conn.commit()
+    conn.close()
+
+    flash('Turno modificado con éxito.', 'success')
+    return redirect(url_for('mis_turnos'))
+
+

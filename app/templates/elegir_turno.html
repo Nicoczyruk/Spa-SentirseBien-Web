@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Elegir Turno - SPA Sentirse Bien
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4">Elegir Turno para {{ servicio[0] }}</h2>
+    <form action="{{ url_for('elegir_turno', servicio_id=servicio_id) }}" method="POST">
+        <div class="mb-3">
+            <label for="fecha" class="form-label">Fecha</label>
+            <input type="date" class="form-control" id="fecha" name="fecha" required>
+        </div>
+        <div class="mb-3">
+            <label for="hora" class="form-label">Hora</label>
+            <input type="time" class="form-control" id="hora" name="hora" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Confirmar Turno</button>
+    </form>
+</div>
+{% endblock %}
