@@ -1,74 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='assets/logo4.ico') }}" />
-    <title>Quiénes Somos - Sentirse Bien</title>
-    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
-    <link href="{{ url_for('static', filename='css/about.css') }}" rel="stylesheet" />
+{% extends "base.html" %}
 
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg" style="background-color: #e9ffc7;">
-        <div class="container-fluid">
-            <!-- Título del spa -->
-            <a class="navbar-brand" href="/">
-                <img src="/static/assets/img/logo.png" alt="LOGO" style="width: 50px; height: 30px; margin-right: 8px;">
-                Sentirse Bien
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ url_for('main.index') }}">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.gallery') }}">Galería</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.about') }}">Sobre Nosotros</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.services') }}">Servicios</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.news') }}">Noticias</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.jobs') }}">Empleo</a>
-                    </li>
-                </ul>
-                <!-- Botones de inicio de sesión y registro -->
-                <a class="btn btn-outline-primary mx-2" href="#login">Log In</a>
-                <a class="btn btn-primary" href="#signup">Sign Up</a>
-            </div>
-        </div>
-    </nav>
-          <!-- Masthead-->
-          <header class="masthead">
-            <div class="container position-relative">
-                <div class="row justify-content-center">
-                    <div class="col-xl-6">
-                        <div class="text-center text-white">
-                            <h1 class="mb-5">Sobre nosotros</h1>
-                        </div>
+{% block title %}Sobre Nosotros - SPA Sentirse Bien{% endblock %}
+
+<!--Esto enlaza el .css respectivo para aplicarlo a esta pagina-->
+{% block styles %}
+    <link href="{{ url_for('static', filename='css/about.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <!-- Masthead -->
+    <header class="masthead">
+        <div class="container position-relative">
+            <div class="row justify-content-center">
+                <div class="col-xl-6">
+                    <div class="text-center text-white">
+                        <h1 class="mb-5">Sobre nosotros</h1>
                     </div>
                 </div>
             </div>
-        </header>
-        <section class="presentacion bg-light">
-            <div class= "container d-flex justify-content-center align-items-center flex-column">
-                <div class="row justifiy-content-center">
-                        <div class="mb-4">
-                            <img src="/static/assets/img/logo.png" alt="logo" style="max-width: 200px; height: auto;">
-                        </div>
-                        <h2 class = "custom-text-color">Sentirse Bien</h2>
+        </div>
+    </header>
+
+    <section class="presentacion bg-light">
+        <div class="container d-flex justify-content-center align-items-center flex-column">
+            <div class="row justify-content-center">
+                <div class="mb-4">
+                    <img src="/static/assets/img/logo.png" alt="logo" style="max-width: 200px; height: auto;">
                 </div>
+                <h2 class="custom-text-color">Sentirse Bien</h2>
             </div>
-        </section>
+        </div>
+    </section>
+
+
         <section class="showcase" style="background-color: #e9ffc7;">
                 <div class="icon-text-container">
                     <div class = "text2">
@@ -102,21 +66,20 @@
                         </div>
                         <img src="/static/assets/img/Calidad.png" alt = "Icono" class="icon">
                     </div>
+        </div>
+    </section>
+
+    <section class="contact-us">
+        <h2>Te interesa? Contáctenos</h2>
+        <div class="contact-info">
+            <div class="contact-item">
+                <h3>Correo Electrónico:</h3>
+                <p><a href="javascript:void(0);">info@ejemplo.com</a></p>
             </div>
-        </section>
-        <section class="contact-us">
-            <h2>Te interesa? Contáctenos</h2>
-            <div class="contact-info">
-                <div class="contact-item">
-                    <h3>Correo Electrónico:</h3>
-                    <p><a href="javascript:void(0);">info@ejemplo.com</a></p>
-                </div>
-                <div class="contact-item">
-                    <h3>Teléfono:</h3>
-                    <p><a href="javascript:void(0);">+123 456 789</a></p>
-                </div>
+            <div class="contact-item">
+                <h3>Teléfono:</h3>
+                <p><a href="javascript:void(0);">+123 456 789</a></p>
             </div>
-        </section>
-               
-</body>
-</html>
+        </div>
+    </section>
+{% endblock %}
