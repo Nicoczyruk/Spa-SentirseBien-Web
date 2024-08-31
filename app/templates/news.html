@@ -1,15 +1,22 @@
 {% extends "base.html" %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %}Noticias del SPA{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/news.css') }}">
+{% endblock %}
 
 {% block content %}
-    <!-- Main Content -->
-    <div class="container my-5">
-        <h1 class="text-center">{{ title }}</h1>
-        <p class="text-center">Bienvenido a la sección de {{ title }}. Aquí puedes encontrar toda la información relevante.</p>
-        <!-- Aquí puedes agregar el contenido específico de la página -->
-        <div class="content">
-            {{ content }}
-        </div>
+<div class="container my-5">
+    <h1 class="text-center">Noticias del Mundo del SPA</h1>
+    <p class="text-center">Mantente informado con las últimas noticias sobre salud, bienestar y SPA.</p>
+    <div id="news-section">
+        <!-- Las noticias se mostrarán aquí -->
     </div>
+</div>
+{% endblock %}
+
+
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/news.js') }}"></script>
 {% endblock %}

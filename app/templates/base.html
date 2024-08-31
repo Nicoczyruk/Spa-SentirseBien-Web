@@ -8,7 +8,7 @@
     <title>{% block title %}Sentirse Bien{% endblock %}</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='assets/logo.ico') }}" />
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='assets/logo4.ico') }}" />
     
     <!-- Bootstrap icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" type="text/css" />
@@ -217,6 +217,8 @@
     {% block empleado_dashboard_scripts %}{% endblock %}
     {% block admin_dashboard_scripts %}{% endblock %}
     {% block turnos_scripts %}{% endblock %}
+    {% block scripts %}{% endblock %}
+
     <!-- Añadir aquí el script directamente -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
