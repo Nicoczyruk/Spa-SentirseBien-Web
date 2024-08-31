@@ -7,12 +7,24 @@
   
   .icon {
     margin-right: 500px; /* Espacio entre el icono y el texto */
+    max-width: 100%; /* La imagen no será más ancha que su contenedor */
+    max-height: 500px; /* Limita la altura máxima de la imagen */
+    width: auto; /* La imagen mantendrá su proporción */
+    height: auto; /* La imagen mantendrá su proporción */
   }
   .icon2{
-    margin-left: 500px;
+    margin-left: 350px;
+    max-width: 100%; /* La imagen no será más ancha que su contenedor */
+    max-height: 500px; /* Limita la altura máxima de la imagen */
+    width: auto; /* La imagen mantendrá su proporción */
+    height: auto; /* La imagen mantendrá su proporción */
   }
   .icon3{
     margin-right: 500px;
+    max-width: 100%; /* La imagen no será más ancha que su contenedor */
+    max-height: 500px; /* Limita la altura máxima de la imagen */
+    width: auto; /* La imagen mantendrá su proporción */
+    height: auto; /* La imagen mantendrá su proporción */
   }
   
   .text {

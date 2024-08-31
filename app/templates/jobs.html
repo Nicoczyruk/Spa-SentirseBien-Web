@@ -7,6 +7,7 @@
     <!-- Enlace al archivo CSS específico para la página de empleo -->
     <link href="{{ url_for('static', filename='css/jobs.css') }}" rel="stylesheet">
     <title>Empleo - SPA Sentirse Bien</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='assets/logo4.ico') }}" />
 </head>
 <body>
     <!-- Navigation-->
@@ -39,9 +40,6 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.jobs') }}">Empleo</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('sql_test') }}">Contacto</a>
                     </li>
 
                 </ul>
