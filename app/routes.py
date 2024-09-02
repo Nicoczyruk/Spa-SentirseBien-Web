@@ -52,18 +52,17 @@ def load_user(user_id):
 
 @main.route('/')
 def index():
-    return render_template('index.html')
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id_comentario, nombre, comentario, fecha FROM comentarios ORDER BY fecha DESC")
+    comentarios = cursor.fetchall()
+    conn.close()
+
+    return render_template('index.html', comentarios=comentarios)
 
 @main.route('/gallery') 
 def gallery():
-
-    images1 = [
-        'testimonials-1.jpg',
-        'testimonials-2.jpg',
-        'testimonials-3.jpg',
-    ]
-
-    return render_template('gallery.html', images = images1)
+    return render_template('gallery.html')
 
 @main.route('/about')
 def about():
@@ -485,5 +484,52 @@ def modificar_turno(turno_id):
 
     flash('Turno modificado con éxito.', 'success')
     return redirect(url_for('mis_turnos'))
+
+def convertir_a_hora_argentina(utc_datetime):
+    # UTC-3 para Argentina Standard Time
+    return utc_datetime - timedelta(hours=3)
+
+from sqlalchemy.sql import text
+from datetime import datetime, timedelta
+
+def convertir_a_hora_argentina(utc_datetime):
+    return utc_datetime - timedelta(hours=3)
+
+@main.route('/submit_comment', methods=['POST'])
+def submit_comment():
+    nombre = request.form.get('nombre')
+    comentario = request.form.get('comentario')
+
+    if not nombre and current_user.is_authenticated:
+        nombre = current_user.nombre_usuario
+    if not nombre:
+        nombre = "Anónimo"
+
+    # Escapar caracteres especiales en la cadena para evitar errores en la consulta
+    nombre = nombre.replace("'", "''")
+    comentario = comentario.replace("'", "''")
+
+    # Insertar el comentario en la base de datos
+    insert_query = text(
+        "INSERT INTO comentarios (nombre, comentario) VALUES (:nombre, :comentario);"
+    )
+    select_query = text(
+        "SELECT TOP 1 nombre, fecha FROM comentarios ORDER BY id_comentario DESC"
+    )
+
+    with engine.connect() as conn:
+        conn.execute(insert_query, {'nombre': nombre, 'comentario': comentario})
+        conn.commit()
+        # Obtener el comentario recién insertado
+        nuevo_comentario = conn.execute(select_query).fetchone()
+
+    if nuevo_comentario:
+        # Convertir la hora a la zona horaria de Argentina
+        fecha_local = convertir_a_hora_argentina(nuevo_comentario[1])  # Accede con índice [1] para la fecha
+        # Formatear la fecha para la respuesta
+        fecha_formateada = fecha_local.strftime('%d/%m/%Y %H:%M')
+        return jsonify({'nombre': nuevo_comentario[0], 'comentario': comentario, 'fecha': fecha_formateada})  # Accede con índice [0] para el nombre
+    else:
+        return jsonify({'error': 'Error al insertar el comentario.'}), 500
 
 

@@ -79,6 +79,8 @@
                         <li><a class="dropdown-item" href="{{ url_for('consulta') }}">Consulta</a></li>
                         {% elif current_user.rol == 'Administrador' %}
                         <li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('empleado_dashboard') }}">Empleado Dashboard</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('consulta') }}">Consulta</a></li>
                         {% elif current_user.rol == 'Empleado' %}
                         <li><a class="dropdown-item" href="{{ url_for('empleado_dashboard') }}">Empleado Dashboard</a></li>
                         {% endif %}
@@ -218,8 +220,9 @@
     {% block admin_dashboard_scripts %}{% endblock %}
     {% block turnos_scripts %}{% endblock %}
     {% block scripts %}{% endblock %}
+    {% block scriptsIndex %}{% endblock %}
 
-    <!-- Añadir aquí el script directamente -->
+    <!-- SCRIPS DIRECTOS QUE POR X O POR Y NO SE PUEDEN CARGAR DESDE OTRO ARCHIVO -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const userDropdown = document.getElementById('userDropdown');

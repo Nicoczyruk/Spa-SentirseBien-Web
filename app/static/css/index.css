@@ -1,0 +1,66 @@
+/* Estilos para la sección de comentarios */
+.comments-section {
+    padding: 40px 20px;
+    background-color: #ffc9cb; /* Fondo rosado */
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+/* División entre secciones */
+.showcase {
+    border-bottom: 2px solid #000; /* Línea divisoria negra entre secciones */
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+/* Estilo para las cajas de comentarios */
+#comentarios-list .card {
+    background-color: #d0f5a9; /* Fondo verde más clarito */
+    border-radius: 10px;
+    margin: 0 auto; /* Centra las tarjetas */
+    max-width: 80%; /* Reduce el ancho de las tarjetas en un 20% */
+    border: 1px solid #ddd;
+    padding: 20px;
+    position: relative;
+}
+
+/* Estilo para el formulario de comentarios */
+#commentForm {
+    background-color: #d0f5a9; /* Mismo verde clarito para el formulario y las tarjetas de comentarios */
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 40px;
+    border: 1px solid #ccc;
+}
+
+/* Estilo para el nombre en la parte superior izquierda de la tarjeta */
+.card-title {
+    color: #333;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    left: 20px;
+}
+
+/* Estilo para el comentario */
+.card-text {
+    color: #555;
+    text-align: left; /* Comentario alineado a la izquierda */
+    margin-top: 40px;
+}
+
+/* Estilo para la fecha en la parte inferior derecha */
+.text-muted.small {
+    color: #666;
+    font-size: 0.85rem;
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+}
+
+/* Ajuste del botón de envío del formulario */
+#commentForm button {
+    background-color: #5cb85c; /* Botón con color verde más oscuro */
+    border-color: #4cae4c;
+    color: white;
+}
