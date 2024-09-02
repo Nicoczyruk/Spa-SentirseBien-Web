@@ -12,25 +12,24 @@
         <h1 class="text-center mb-4">Explora nuestros servicios</h1>
         {% set service_id = 1 %}
         {% for category, services in categories.items() %}
-        <h2>{{ category }}</h2>
-        <div class="row">
-            {% for service in services %}
-            <div class="col-md-4 mb-4">
-                <div class="service-card">
-                    <h3>{{ service['name'] }}</h3> <!-- Título por fuera de la imagen -->
-                    <img src="{{ url_for('static', filename='assets/img/' + service['image']) }}" alt="{{ service['name'] }}">
-                    <div class="service-info">
-                        <p>{{ service['description'] }}</p>
-                        <h4>Precio: {{ service['price'] }}</h4>
-                        <a href="{{ url_for('elegir_turno', servicio_id=service_id) }}" class="btn btn-primary btn-choose">Elegir</a>
+            <h2>{{ category }}</h2>
+            <div class="row">
+                {% for service in services %}
+                <div class="col-md-4 mb-4">
+                    <div class="service-card">
+                        <h3>{{ service['name'] }}</h3> <!-- Título por fuera de la imagen -->
+                        <img src="{{ url_for('static', filename='assets/img/' + service['image']) }}" alt="{{ service['name'] }}">
+                        <div class="service-info">
+                            <p>{{ service['description'] }}</p>
+                            <h4>Precio: {{ service['price'] }}</h4>
+                            <a href="{{ url_for('elegir_turno', servicio_id=service['id']) }}" class="btn btn-primary btn-choose">Elegir</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            {% set service_id = service_id + 1 %}
-            {% endfor %}
-        </div>
-        <hr> <!-- Separador entre categorías -->
         {% endfor %}
+    </div>
+    <hr> <!-- Separador entre categorías -->
+{% endfor %}
     </div>
 {% endblock %}
 
