@@ -2,6 +2,8 @@
 
 #news-section {
     margin-top: 20px;
+    align-items: center;
+    text-align: center;
 }
 
 .news-article {
