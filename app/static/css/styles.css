@@ -10972,3 +10972,11 @@ footer.footer {
     box-shadow: none;
     background-color: transparent; /* Esto asegura que no haya un cambio de color de fondo */
 }
+
+#loginButton {
+  margin-right: 5px; /* Ajusta este valor según el espacio que quieras */
+}
+
+#signUpButton {
+  margin-left: 5px; /* Esto crea un pequeño margen a la izquierda */
+}

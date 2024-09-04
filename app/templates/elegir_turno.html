@@ -8,15 +8,65 @@
 <div class="container my-5">
     <h2 class="text-center mb-4">Elegir Turno para {{ servicio[0] }}</h2>
     <form action="{{ url_for('elegir_turno', servicio_id=servicio_id) }}" method="POST">
+        <!-- Dropdown para elegir la fecha -->
         <div class="mb-3">
             <label for="fecha" class="form-label">Fecha</label>
-            <input type="date" class="form-control" id="fecha" name="fecha" required>
+            <select class="form-select" id="fecha" name="fecha" required>
+                <!-- Las fechas se generarán automáticamente mediante JavaScript -->
+            </select>
         </div>
+
+        <!-- Dropdown para elegir la hora -->
         <div class="mb-3">
             <label for="hora" class="form-label">Hora</label>
-            <input type="time" class="form-control" id="hora" name="hora" required>
+            <select class="form-select" id="hora" name="hora" required>
+                <option value="09:00">09:00 AM</option>
+                <option value="12:00">12:00 PM</option>
+                <option value="15:00">03:00 PM</option>
+                <option value="18:00">06:00 PM</option>
+            </select>
         </div>
+
         <button type="submit" class="btn btn-primary">Confirmar Turno</button>
     </form>
 </div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Obtener el select de fechas
+        const fechaSelect = document.getElementById('fecha');
+        
+        // Función para generar las próximas 15 fechas
+        function generarFechas() {
+            const fechas = [];
+            const hoy = new Date();
+            for (let i = 0; i < 15; i++) {
+                const nuevaFecha = new Date();
+                nuevaFecha.setDate(hoy.getDate() + i);
+                
+                // Formatear la fecha como "Lunes 20 de Septiembre 2024"
+                const opcionesFormato = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                const fechaLegible = nuevaFecha.toLocaleDateString('es-ES', opcionesFormato);
+
+                // Obtener la fecha en formato "YYYY-MM-DD" para el value del <select>
+                const fechaISO = nuevaFecha.toISOString().split('T')[0];
+
+                fechas.push({ legible: fechaLegible, value: fechaISO });
+            }
+            return fechas;
+        }
+
+        // Agregar las fechas generadas al select
+        const fechas = generarFechas();
+        fechas.forEach(fecha => {
+            const option = document.createElement('option');
+            option.value = fecha.value;
+            option.textContent = fecha.legible;
+            fechaSelect.appendChild(option);
+        });
+    });
+</script>
 {% endblock %}

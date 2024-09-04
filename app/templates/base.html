@@ -58,16 +58,14 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.jobs') }}">Empleo</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('sql_test') }}">SQL Test</a>
-                    </li>
                 </ul>
                 <!-- Botones Sign Up y Log In -->
-                <a href="#loginModal" class="btn btn-outline-primary" data-bs-toggle="modal" style="display: none;" id="loginButton">Log In</a>
-                <a href="#registerModal" class="btn btn-primary" data-bs-toggle="modal" style="display: none;" id="signUpButton">Registrarse</a>
+                <a href="#loginModal" class="btn btn-primary" data-bs-toggle="modal" id="loginButton">Log In</a>
+                <a href="#registerModal" class="btn btn-primary" data-bs-toggle="modal" id="signUpButton">Registrarse</a>
+
                 <div class="dropdown" id="userDropdown" style="display: none;">
                     <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="https://via.placeholder.com/40" alt="User" class="rounded-circle">
+                        <img src="{{ url_for('static', filename='assets/img/profile.png') }}" alt="User" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;">
                         <span id="usernameDisplay">{{ current_user.nombre_usuario }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end text-small" aria-labelledby="dropdownUser">

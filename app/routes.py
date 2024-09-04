@@ -36,7 +36,7 @@ class User(UserMixin):
         return False
 
 login_manager = LoginManager()
-login_manager.init_app(app)  # Asegúrate de que esto se haga en la creación de la aplicación
+login_manager.init_app(app)  
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -105,65 +105,6 @@ def news():
 @main.route('/jobs')
 def jobs():
     return render_template('jobs.html')
-
-@app.route('/sql-test', methods=['GET', 'POST'])
-def sql_test():
-    usuarios = []
-    try:
-        with engine.connect() as connection:
-            if request.method == 'POST':
-                # Crear usuario
-                if 'create_user' in request.form:
-                    nombre_usuario = request.form.get('nombre_usuario')
-                    password = request.form.get('password')
-                    email = request.form.get('email')
-                    if nombre_usuario and password and email:
-                        connection.execute(
-                            text("INSERT INTO usuarios (nombre_usuario, password, email) VALUES (:nombre_usuario, :password, :email)"),
-                            {"nombre_usuario": nombre_usuario, "password": password, "email": email}
-                        )
-                        connection.commit()
-                        flash('Usuario creado exitosamente', 'success')
-                    else:
-                        flash('Todos los campos son obligatorios', 'danger')
-
-                # Modificar usuario
-                elif 'modify_user' in request.form:
-                    id_usuario = request.form.get('id_usuario')
-                    new_nombre_usuario = request.form.get('new_nombre_usuario')
-                    new_email = request.form.get('new_email')
-                    connection.execute(
-                        text("UPDATE usuarios SET nombre_usuario = :new_nombre_usuario, email = :new_email WHERE id_usuario = :id_usuario"),
-                        {"new_nombre_usuario": new_nombre_usuario, "new_email": new_email, "id_usuario": id_usuario}
-                    )
-                    connection.commit()
-                    flash('Usuario modificado exitosamente', 'success')
-
-                # Eliminar usuario
-                elif 'delete_user' in request.form:
-                    id_usuario = request.form.get('id_usuario')
-                    connection.execute(
-                        text("DELETE FROM usuarios WHERE id_usuario = :id_usuario"),
-                        {"id_usuario": id_usuario}
-                    )
-                    connection.commit()
-                    flash('Usuario eliminado exitosamente', 'success')
-            # Si no hay POST o no se hizo 'load_users', cargar usuarios por defecto
-            if not usuarios:
-                result = connection.execute(text("SELECT * FROM usuarios"))
-                usuarios = result.fetchall()
-
-        return render_template('sql_test.html', title='SQL Test', usuarios=usuarios)
-
-    except SQLAlchemyError as e:
-        logging.error(f"Error al ejecutar la consulta SQL: {e}")
-        flash(f"Ocurrió un error al ejecutar la consulta: {str(e)}", 'danger')
-        return redirect(url_for('sql_test'))
-
-    except Exception as e:
-        logging.error(f"Error inesperado: {e}")
-        flash(f"Ocurrió un error inesperado: {str(e)}", 'danger')
-        return redirect(url_for('sql_test'))
 
 def get_db_connection():
     conn = pyodbc.connect(odbc_connection_string)
@@ -242,12 +183,39 @@ def register():
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
     
-@app.route('/perfil')
-@login_required  # Asegura que el usuario esté logueado
+@app.route('/perfil', methods=['GET', 'POST'])
+@login_required
 def perfil():
     user_id = current_user.id
     conn = get_db_connection()
     cursor = conn.cursor()
+
+    if request.method == 'POST':
+        # Obtener los valores del formulario
+        nombre = request.form.get('nombre')
+        apellido = request.form.get('apellido')
+        email = request.form.get('email')
+        telefono = request.form.get('telefono')
+        direccion = request.form.get('direccion')
+
+        # Asegurarnos de que ningún campo está vacío
+        if not (nombre and apellido and email and telefono and direccion):
+            conn.close()
+            return jsonify({'success': False, 'error': 'Todos los campos son obligatorios'}), 400
+
+        # Actualizar todos los campos sin verificar cambios individuales
+        consulta_sql = """
+        UPDATE clientes
+        SET nombre = ?, apellido = ?, email = ?, telefono = ?, direccion = ?
+        WHERE id_cliente = (SELECT id_cliente FROM usuarios WHERE id_usuario = ?)
+        """
+        cursor.execute(consulta_sql, (nombre, apellido, email, telefono, direccion, user_id))
+        conn.commit()
+        conn.close()
+
+        return jsonify({'success': True})
+
+    # Si el método es GET, obtener los datos actuales del cliente
     cursor.execute("SELECT * FROM clientes WHERE id_cliente = (SELECT id_cliente FROM usuarios WHERE id_usuario = ?)", (user_id,))
     client_data = cursor.fetchone()
     conn.close()
@@ -256,8 +224,6 @@ def perfil():
         return render_template('perfil.html', client=client_data)
     else:
         return "No se encontraron datos del cliente", 404
-    
-from flask import redirect, url_for, flash
 
 @app.route('/consulta', methods=['GET', 'POST'])
 @login_required  # Asegura que el usuario esté logueado

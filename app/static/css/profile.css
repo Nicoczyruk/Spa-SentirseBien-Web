@@ -1,0 +1,28 @@
+/* Bordes normales siempre visibles */
+.profile-field {
+    border: 1px solid #ccc; /* Borde gris claro por defecto */
+    padding: 8px;
+    background-color: #f8f9fa; /* Fondo claro para diferenciar el campo */
+    margin-bottom: 15px;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+/* Bordes para el modo de edición */
+.profile-field.editable {
+    border: 2px solid #007bff; /* Borde azul cuando está en modo de edición */
+    background-color: #ffffff; /* Fondo blanco cuando está en modo de edición */
+}
+
+/* Estilo para botones */
+#editButton {
+    margin-right: 10px;
+}
+
+#saveButton {
+    margin-left: 10px;
+}
+
+/* Añadir transición suave para el cambio de borde */
+.profile-field {
+    transition: all 0.3s ease-in-out;
+}
