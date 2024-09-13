@@ -155,6 +155,20 @@ def register():
         conn = get_db_connection()
         cursor = conn.cursor()
 
+        # Verificar si el email ya existe en clientes
+        cursor.execute("SELECT id_cliente FROM clientes WHERE email = ?", (data['email'],))
+        existing_client = cursor.fetchone()
+        if existing_client is not None:
+            conn.close()
+            return jsonify({'success': False, 'message': 'El email ya está en uso.'})
+
+        # Verificar si el nombre de usuario ya existe en usuarios
+        cursor.execute("SELECT id_usuario FROM usuarios WHERE nombre_usuario = ?", (data['nombre_usuario'],))
+        existing_user = cursor.fetchone()
+        if existing_user is not None:
+            conn.close()
+            return jsonify({'success': False, 'message': 'El nombre de usuario ya está en uso.'})
+
         # Inserta el nuevo cliente
         cursor.execute("""
             INSERT INTO clientes (nombre, apellido, email, telefono, direccion)
@@ -164,7 +178,7 @@ def register():
         conn.commit()
 
         # Obtener el ID del cliente recién insertado usando el email
-        cursor.execute("SELECT id_cliente FROM clientes WHERE email = ?", data['email'])
+        cursor.execute("SELECT id_cliente FROM clientes WHERE email = ?", (data['email'],))
         id_cliente = cursor.fetchone()[0]
 
         # Hashear la contraseña
@@ -179,9 +193,10 @@ def register():
         conn.commit()
         conn.close()
 
-        return jsonify({'success': True, 'message': 'Registration successful'})
+        return jsonify({'success': True, 'message': 'Registro exitoso'})
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
+
     
 @app.route('/perfil', methods=['GET', 'POST'])
 @login_required
@@ -228,11 +243,40 @@ def perfil():
 @app.route('/consulta', methods=['GET', 'POST'])
 @login_required  # Asegura que el usuario esté logueado
 def consulta():
+    services_data = {
+    'Masajes': [
+        {'id': 1, 'image': 'antiStress.jpg', 'name': 'Anti-stress', 'description': 'Descripción del servicio...', 'price': '$40'},
+        {'id': 2, 'image': 'masajeDescontracturante.jpg', 'name': 'Descontracturantes', 'description': 'Descripción del servicio...', 'price': '$50'},
+        {'id': 3, 'image': 'masajeConPiedrasCalientes.jpg', 'name': 'Masajes con piedras calientes', 'description': 'Descripción del servicio...', 'price': '$60'},
+        {'id': 4, 'image': 'masajeCirculatorio.jpg', 'name': 'Circulatorios', 'description': 'Descripción del servicio...', 'price': '$55'}
+    ],
+    'Belleza': [
+        {'id': 5, 'image': 'liftingPesta.jpg', 'name': 'Lifting de pestaña', 'description': 'Descripción del servicio...', 'price': '$70'},
+        {'id': 6, 'image': 'depilacionFacial.jpg', 'name': 'Depilación facial', 'description': 'Descripción del servicio...', 'price': '$30'},
+        {'id': 7, 'image': 'bellezaManosYPies.jpg', 'name': 'Belleza de manos y pies', 'description': 'Descripción del servicio...', 'price': '$45'}
+    ],
+    'Tratamientos Faciales': [
+        {'id': 8, 'image': 'puntaDiamante.jpg', 'name': 'Punta de Diamante', 'description': 'Descripción del servicio...', 'price': '$80'},
+        {'id': 9, 'image': 'limpiezaHidratacion.jpg', 'name': 'Limpieza profunda + Hidratación', 'description': 'Descripción del servicio...', 'price': '$90'},
+        {'id': 10, 'image': 'crioFrecuencia.jpg', 'name': 'Crio frecuencia facial', 'description': 'Descripción del servicio...', 'price': '$100'}
+    ],
+    'Tratamientos Corporales': [
+        {'id': 11, 'image': 'velaSlim.jpg', 'name': 'VelaSlim', 'description': 'Descripción del servicio...', 'price': '$120'},
+        {'id': 12, 'image': 'dermoHealth.jpg', 'name': 'DermoHealth', 'description': 'Descripción del servicio...', 'price': '$110'},
+        {'id': 13, 'image': 'crioFrecuenciaCorporal.jpg', 'name': 'Criofrecuencia', 'description': 'Descripción del servicio...', 'price': '$115'},
+        {'id': 14, 'image': 'ultraCavitacion.jpg', 'name': 'Ultracavitación', 'description': 'Descripción del servicio...', 'price': '$105'}
+    ]
+}
     if request.method == 'POST':
         nombre = request.form['nombre']  # El nombre se extrae del formulario
         email = request.form['email']
         titulo = request.form['titulo']
+        servicio = request.form.get('servicio', '')
         mensaje = request.form['mensaje']
+
+        # Si se seleccionó un servicio, incluirlo en el mensaje
+        if servicio:
+            mensaje = f"Servicio consultado: {servicio}\n\n{mensaje}"
 
         # Guardar la consulta en la base de datos
         conn = get_db_connection()
@@ -245,7 +289,8 @@ def consulta():
         # Redirigir a la página de consulta con un mensaje de éxito
         return redirect(url_for('consulta', success=True))
     
-    return render_template('consulta.html', success=request.args.get('success'))
+    # Renderizar el template con 'services_data'
+    return render_template('consulta.html', success=request.args.get('success'), services_data=services_data)
 
 
 

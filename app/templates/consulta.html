@@ -30,6 +30,19 @@
                     <input type="text" class="form-control" id="titulo" name="titulo" required>
                 </div>
                 <div class="mb-3">
+                    <label for="servicio" class="form-label">Servicio (Opcional)</label>
+                    <select class="form-select" id="servicio" name="servicio">
+                        <option value="">Seleccionar servicio</option>
+                        {% for categoria, servicios in services_data.items() %}
+                            <optgroup label="{{ categoria }}">
+                                {% for servicio in servicios %}
+                                    <option value="{{ servicio['name'] }}">{{ servicio['name'] }}</option>
+                                {% endfor %}
+                            </optgroup>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
                     <label for="mensaje" class="form-label">Consulta</label>
                     <textarea class="form-control" id="mensaje" name="mensaje" rows="5" required></textarea>
                 </div>

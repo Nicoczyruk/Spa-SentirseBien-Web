@@ -3,37 +3,203 @@
 {% block title %}Servicios - SPA Sentirse Bien{% endblock %}
 
 {% block styles %}
-    <link href="{{ url_for('static', filename='css/services.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/services.css') }}" rel="stylesheet">
+<!-- Estilos adicionales para el banner de medios de pago y ajustes de la página -->
+<style>
+    /* Fondo general de la sección de servicios */
+    body {
+        background-color: #ffc9cb; /* Fondo rosado para el resto de la página */
+        color: #333; /* Color del texto en el resto de la página */
+    }
+
+    /* Estilos para la barra de navegación */
+    .navbar {
+        background-color: #e9ffc7; /* Color verde para el fondo del menú */
+        border-bottom: 2px solid #ccc; /* Línea divisoria inferior */
+    }
+
+    .navbar .nav-link {
+        color: #333; /* Cambiar color del texto del menú para que sea visible */
+    }
+
+    .navbar .nav-link:hover {
+        color: #007bff; /* Color del texto al pasar el cursor */
+    }
+
+    /* Ajustes para el banner de medios de pago */
+    .payment-banner {
+        margin-top: 20px;
+        background-color: #e9ffc7; /* Mismo color que el navbar */
+        padding: 10px 0; /* Reducir padding para hacer el banner más pequeño */
+        border-top: 2px solid #ccc; /* Línea divisoria superior */
+        animation: slideDown 1s ease-out; /* Animación de deslizamiento */
+    }
+
+    .payment-banner h2 {
+        margin-bottom: 10px; /* Reducir margen inferior */
+        color: #333; /* Color del texto */
+        font-size: 1.5em; /* Ajustar tamaño de fuente si es necesario */
+    }
+
+    .payment-methods img {
+        height: 30px; /* Reducir altura de las imágenes */
+        margin: 0 5px; /* Reducir margen entre imágenes */
+    }
+
+    /* Animación para el banner */
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Estilos para el contenedor principal */
+    .container {
+        background-color: #ffc9cb; /* Fondo rosado para el contenedor */
+        padding: 20px;
+        border-radius: 10px; /* Bordes redondeados */
+    }
+
+    /* Estilos para las tarjetas de servicio */
+    .service-card {
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+        color: #fff;
+        transition: transform 0.3s ease;
+        width: 100%;
+        background-color: #fff;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        padding: 0;
+    }
+
+    .service-card:hover {
+        transform: scale(1.05);
+    }
+
+    .service-card h3 {
+        margin: 0;
+        position: relative;
+        top: 0;
+        z-index: 2;
+        color: #333;
+        background: #e9ffc7;
+        padding: 10px 0;
+        width: 100%;
+        box-sizing: border-box;
+        font-size: 1.2em;
+        text-align: center;
+        line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .service-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: fill;
+        transition: filter 0.3s ease, transform 0.3s ease;
+        border-radius: 0 0 15px 15px;
+    }
+
+    .service-card:hover img {
+        filter: blur(2px);
+        transform: scale(1.05);
+    }
+
+    .service-info {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: none; /* Fondo transparente */
+        color: #fff; /* Color del texto en blanco para contraste */
+        padding: 10px;
+        transition: opacity 0.3s ease;
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .service-card:hover .service-info {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .service-info p, .service-info h4 {
+        color: #fff; /* Texto en blanco para que sea visible sobre la imagen */
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Sombra para mejorar la legibilidad */
+    }
+
+    /* Botón Elegir */
+    .btn-choose {
+        background-color: #e9ffc7;
+        border: none;
+        color: #333;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        border-radius: 5px;
+    }
+
+    .btn-choose:hover {
+        background-color: #c7e9a5;
+        color: #000;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-    <!-- Sección de Servicios -->
-    <div class="container my-5">
-        <h1 class="text-center mb-4">Explora nuestros servicios</h1>
-        {% set service_id = 1 %}
-        {% for category, services in categories.items() %}
-            <h2>{{ category }}</h2>
-            <div class="row">
-                {% for service in services %}
-                <div class="col-md-4 mb-4">
-                    <div class="service-card">
-                        <h3>{{ service['name'] }}</h3> <!-- Título por fuera de la imagen -->
-                        <img src="{{ url_for('static', filename='assets/img/' + service['image']) }}" alt="{{ service['name'] }}">
-                        <div class="service-info">
-                            <p>{{ service['description'] }}</p>
-                            <h4>Precio: {{ service['price'] }}</h4>
-                            <a href="{{ url_for('elegir_turno', servicio_id=service['id']) }}" class="btn btn-primary btn-choose">Elegir</a>
-                        </div>
-                    </div>
+<!-- Banner de Medios de Pago -->
+<div class="payment-banner text-center">
+    <h2>Medios de Pago Disponibles</h2>
+    <div class="payment-methods d-flex justify-content-center">
+        <img src="{{ url_for('static', filename='assets/img/visa.png') }}" alt="Visa">
+        <img src="{{ url_for('static', filename='assets/img/mastercard.png') }}" alt="Mastercard">
+        <img src="{{ url_for('static', filename='assets/img/amex.png') }}" alt="American Express">
+        <img src="{{ url_for('static', filename='assets/img/mercadopago.png') }}" alt="Mercado Pago">
+        <img src="{{ url_for('static', filename='assets/img/pagofacil.png') }}" alt="Pago Fácil">
+        <img src="{{ url_for('static', filename='assets/img/rapipago.png') }}" alt="Rapipago">
+    </div>
+</div>
+
+<!-- Sección de Servicios -->
+<div class="container my-5">
+    <h1 class="text-center mb-4">Explora nuestros servicios</h1>
+    {% set service_id = 1 %}
+    {% for category, services in categories.items() %}
+    <h2>{{ category }}</h2>
+    <div class="row">
+        {% for service in services %}
+        <div class="col-md-4 mb-4">
+            <div class="service-card">
+                <h3>{{ service['name'] }}</h3>
+                <img src="{{ url_for('static', filename='assets/img/' + service['image']) }}" alt="{{ service['name'] }}">
+                <div class="service-info">
+                    <p>{{ service['description'] }}</p>
+                    <h4>Precio: {{ service['price'] }}</h4>
+                    <a href="{{ url_for('elegir_turno', servicio_id=service['id']) }}" class="btn btn-primary btn-choose">Elegir</a>
                 </div>
+            </div>
+        </div>
         {% endfor %}
     </div>
-    <hr> <!-- Separador entre categorías -->
-{% endfor %}
-    </div>
+    <hr>
+    {% endfor %}
+</div>
 {% endblock %}
 
 {% block scripts %}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Aquí se debe incluir cualquier script adicional necesario para las animaciones -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Aquí se debe incluir cualquier script adicional necesario para las animaciones -->
 {% endblock %}

@@ -36,8 +36,15 @@
                         <td>{{ consulta[4] }}</td>
                         <td class="fecha-consulta">{{ consulta[6] }}</td>
                         <td>
-                            <button class="btn btn-primary btn-sm" onclick="openResponseModal('{{ consulta[0] }}', '{{ consulta[5] }}')">Responder</button>
+                            <button
+                                class="btn btn-primary btn-sm btn-responder"
+                                data-consulta-id="{{ consulta[0] }}"
+                                data-mensaje="{{ consulta[5]|escape }}"
+                            >
+                                Responder
+                            </button>
                         </td>
+                        
                     </tr>
                     {% endfor %}
                 </tbody>

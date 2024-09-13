@@ -13,12 +13,30 @@ function formatFecha(fechaStr) {
 // Al cargar el DOM
 document.addEventListener('DOMContentLoaded', function () {
     const responseForm = document.getElementById('responseForm');
-    const fechas = document.querySelectorAll('.fecha-consulta'); // Asegúrate de que las fechas tienen esta clase
+    const fechas = document.querySelectorAll('.fecha-consulta');
 
     // Formatear las fechas al cargar la página
     fechas.forEach(function (element) {
-        const fechaOriginal = element.textContent; // Asume que la fecha está como texto dentro del elemento
-        element.textContent = formatFecha(fechaOriginal); // Formatear la fecha y actualizar el contenido
+        const fechaOriginal = element.textContent;
+        element.textContent = formatFecha(fechaOriginal);
+    });
+
+    // Adjuntar eventos a los botones de responder
+    const responderButtons = document.querySelectorAll('.btn-responder');
+
+    responderButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            const consultaId = button.getAttribute('data-consulta-id');
+            const mensaje = button.getAttribute('data-mensaje');
+
+            // Rellenar los campos del modal
+            document.getElementById('consultaId').value = consultaId;
+            document.getElementById('mensajeConsulta').value = mensaje;
+
+            // Mostrar el modal de respuesta
+            const responseModal = new bootstrap.Modal(document.getElementById('responseModal'));
+            responseModal.show();
+        });
     });
 
     // Enviar el formulario de respuesta
@@ -27,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
             event.preventDefault();
 
             const formData = new FormData(responseForm);
-            
+
             fetch('/responder_consulta', {
                 method: 'POST',
                 body: new URLSearchParams(formData)
@@ -51,16 +69,3 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
-
-// Función para abrir el modal de respuesta
-function openResponseModal(consultaId, mensaje) {
-    console.log("Consulta ID:", consultaId); // Verifica que el ID es correcto
-
-    // Rellenar los campos ocultos y el mensaje en el modal
-    document.getElementById('consultaId').value = consultaId;
-    document.getElementById('mensajeConsulta').value = mensaje;
-
-    // Mostrar el modal de respuesta
-    const responseModal = new bootstrap.Modal(document.getElementById('responseModal'));
-    responseModal.show();
-}
