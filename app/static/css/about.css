@@ -111,4 +111,15 @@
     text-decoration: underline;
   }
   
+  #mapa-container {
+    display: flex;
+    width: 100%;
+    background-color: #d0e1b5;
+}
+
+  #mapa {
+      width: 100%; /* Ajusta el ancho del mapa */
+      height: 100%; /* Altura del mapa */
+      border: none;
+  }
   
