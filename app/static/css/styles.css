@@ -10858,6 +10858,7 @@ header.masthead {
   background-size: cover;
   padding-top: 8rem;
   padding-bottom: 8rem;
+  height: 650px;
 }
 header.masthead:before {
   content: "";
