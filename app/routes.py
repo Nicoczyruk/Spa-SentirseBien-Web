@@ -89,7 +89,7 @@ def services():
         {'id': 10, 'image': 'crioFrecuencia.jpg', 'name': 'Crio frecuencia facial', 'description': 'Terapia que combina frío y radiofrecuencia para mejorar la firmeza y elasticidad de la piel, reduciendo arrugas y líneas de expresión.', 'price': '$100'}
     ],
     'Tratamientos Corporales': [
-        {'id': 11, 'image': 'velaSlim.jpg', 'name': 'VelaSlim', 'description': 'Tratamiento que combina succión y energía para reducir la celulitis y moldear el contorno corporal.', 'price': '$120'},
+        {'id': 11, 'image': 'VelaSlim.jpg', 'name': 'VelaSlim', 'description': 'Tratamiento que combina succión y energía para reducir la celulitis y moldear el contorno corporal.', 'price': '$120'},
         {'id': 12, 'image': 'dermoHealth.jpg', 'name': 'DermoHealth', 'description': 'Tecnología avanzada que mejora la oxigenación y la circulación de la piel, promoviendo una apariencia más saludable y rejuvenecida.', 'price': '$110'},
         {'id': 13, 'image': 'crioFrecuenciaCorporal.jpg', 'name': 'Criofrecuencia', 'description': 'Terapia que utiliza frío y radiofrecuencia para reducir la grasa localizada y tonificar la piel en áreas específicas del cuerpo.', 'price': '$115'},
         {'id': 14, 'image': 'ultraCavitacion.jpg', 'name': 'Ultracavitación', 'description': 'Tratamiento no invasivo que utiliza ultrasonido para eliminar la grasa localizada, mejorando el contorno corporal.', 'price': '$105'}
@@ -347,28 +347,27 @@ def empleado_dashboard():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Obtener las consultas de los clientes (haciendo un JOIN con clientes para obtener el nombre y apellido)
+    # Obtener las consultas de los clientes sin duplicados y convertir los campos 'text'
     cursor.execute("""
-    SELECT q.id_consulta, c.nombre, c.apellido, q.email, q.tituloConsulta, q.mensaje, q.fecha
+    SELECT DISTINCT
+        q.id_consulta,
+        c.nombre,
+        c.apellido,
+        q.email,
+        CAST(q.tituloConsulta AS VARCHAR(MAX)) AS tituloConsulta,
+        CAST(q.mensaje AS VARCHAR(MAX)) AS mensaje,
+        q.fecha
     FROM consultas q
     LEFT JOIN clientes c ON q.email = c.email
     ORDER BY q.fecha DESC
     """)
     consultas = cursor.fetchall()
 
-    # Obtener los mensajes de empleo (filtrando por "CV" en el título)
-    cursor.execute("""
-        SELECT c.nombre, c.apellido, q.email, q.tituloConsulta, q.mensaje, q.fecha
-        FROM consultas q
-        LEFT JOIN clientes c ON q.email = c.email
-        WHERE q.tituloConsulta LIKE '%CV%'
-        ORDER BY q.fecha DESC
-    """)
-    empleos = cursor.fetchall()
-
     conn.close()
 
-    return render_template('empleado_dashboard.html', consultas=consultas, empleos=empleos)
+    return render_template('empleado_dashboard.html', consultas=consultas)
+
+
 
 @app.route('/responder_consulta', methods=['POST'])
 @login_required

@@ -21,22 +21,25 @@ document.getElementById('registerForm').addEventListener('submit', function(even
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Cerrar modal y mostrar un mensaje de éxito sin jQuery
+            // Obtener el elemento del modal
             const modal = document.getElementById('registerModal');
+            // Obtener la instancia del modal de Bootstrap
             const modalInstance = bootstrap.Modal.getInstance(modal);
-            modalInstance.hide();
-            // Asegura que el backdrop (fondo oscuro) se elimine
-            const backdrop = document.querySelector('.modal-backdrop');
-            if (backdrop) {
-                backdrop.remove();
+            if (modalInstance) {
+                modalInstance.hide();
             }
+
+            // Mostrar el mensaje de éxito
             alert('Registro exitoso, ahora puedes iniciar sesión.');
+
+            // Recargar la página para eliminar cualquier residual como el backdrop
+            window.location.reload();
         } else {
             // Mostrar el mensaje de error
             alert('Registro fallido: ' + data.message);
         }
     })
     .catch(error => {
-        alert('An error occurred: ' + error.message);
+        alert('Ocurrió un error: ' + error.message);
     });
 });
