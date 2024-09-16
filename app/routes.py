@@ -73,26 +73,26 @@ def about():
 def services():
     services_data = {
     'Masajes': [
-        {'id': 1, 'image': 'antiStress.jpg', 'name': 'Anti-stress', 'description': 'Descripción del servicio...', 'price': '$40'},
-        {'id': 2, 'image': 'masajeDescontracturante.jpg', 'name': 'Descontracturantes', 'description': 'Descripción del servicio...', 'price': '$50'},
-        {'id': 3, 'image': 'masajeConPiedrasCalientes.jpg', 'name': 'Masajes con piedras calientes', 'description': 'Descripción del servicio...', 'price': '$60'},
-        {'id': 4, 'image': 'masajeCirculatorio.jpg', 'name': 'Circulatorios', 'description': 'Descripción del servicio...', 'price': '$55'}
+        {'id': 1, 'image': 'antiStress.jpg', 'name': 'Anti-stress', 'description': 'Masaje relajante que alivia la tensión acumulada y el estrés del día a día, proporcionando una sensación de paz y bienestar.', 'price': '$40'},
+        {'id': 2, 'image': 'masajeDescontracturante.jpg', 'name': 'Descontracturantes', 'description': 'Masaje profundo diseñado para liberar las contracturas musculares y aliviar el dolor en áreas tensas como espalda, cuello y hombros.', 'price': '$50'},
+        {'id': 3, 'image': 'masajeConPiedrasCalientes.jpg', 'name': 'Masajes con piedras calientes', 'description': 'Terapia que utiliza piedras volcánicas calientes para relajar los músculos y mejorar la circulación sanguínea, brindando un alivio profundo.', 'price': '$60'},
+        {'id': 4, 'image': 'masajeCirculatorio.jpg', 'name': 'Circulatorios', 'description': 'Masaje que mejora la circulación sanguínea y linfática, ayudando a reducir la retención de líquidos y la sensación de piernas cansadas.', 'price': '$55'}
     ],
     'Belleza': [
-        {'id': 5, 'image': 'liftingPesta.jpg', 'name': 'Lifting de pestaña', 'description': 'Descripción del servicio...', 'price': '$70'},
-        {'id': 6, 'image': 'depilacionFacial.jpg', 'name': 'Depilación facial', 'description': 'Descripción del servicio...', 'price': '$30'},
-        {'id': 7, 'image': 'bellezaManosYPies.jpg', 'name': 'Belleza de manos y pies', 'description': 'Descripción del servicio...', 'price': '$45'}
+        {'id': 5, 'image': 'liftingPesta.jpg', 'name': 'Lifting de pestaña', 'description': 'Tratamiento que eleva y curva las pestañas de manera natural, realzando la mirada sin necesidad de utilizar rizadores o extensiones.', 'price': '$70'},
+        {'id': 6, 'image': 'depilacionFacial.jpg', 'name': 'Depilación facial', 'description': 'Eliminación precisa del vello facial no deseado, dejando la piel suave y sin irritaciones.', 'price': '$30'},
+        {'id': 7, 'image': 'bellezaManosYPies.jpg', 'name': 'Belleza de manos y pies', 'description': 'Tratamiento completo para embellecer y cuidar las manos y los pies, incluyendo exfoliación, hidratación y esmaltado.', 'price': '$45'}
     ],
     'Tratamientos Faciales': [
-        {'id': 8, 'image': 'puntaDiamante.jpg', 'name': 'Punta de Diamante', 'description': 'Descripción del servicio...', 'price': '$80'},
-        {'id': 9, 'image': 'limpiezaHidratacion.jpg', 'name': 'Limpieza profunda + Hidratación', 'description': 'Descripción del servicio...', 'price': '$90'},
-        {'id': 10, 'image': 'crioFrecuencia.jpg', 'name': 'Crio frecuencia facial', 'description': 'Descripción del servicio...', 'price': '$100'}
+        {'id': 8, 'image': 'puntaDiamante.jpg', 'name': 'Punta de Diamante', 'description': 'Exfoliación facial no invasiva que utiliza puntas de diamante para eliminar células muertas y mejorar la textura de la piel.', 'price': '$80'},
+        {'id': 9, 'image': 'limpiezaHidratacion.jpg', 'name': 'Limpieza profunda + Hidratación', 'description': 'Tratamiento facial que combina una limpieza profunda de los poros con una hidratación intensa, dejando la piel fresca y rejuvenecida.', 'price': '$90'},
+        {'id': 10, 'image': 'crioFrecuencia.jpg', 'name': 'Crio frecuencia facial', 'description': 'Terapia que combina frío y radiofrecuencia para mejorar la firmeza y elasticidad de la piel, reduciendo arrugas y líneas de expresión.', 'price': '$100'}
     ],
     'Tratamientos Corporales': [
-        {'id': 11, 'image': 'velaSlim.jpg', 'name': 'VelaSlim', 'description': 'Descripción del servicio...', 'price': '$120'},
-        {'id': 12, 'image': 'dermoHealth.jpg', 'name': 'DermoHealth', 'description': 'Descripción del servicio...', 'price': '$110'},
-        {'id': 13, 'image': 'crioFrecuenciaCorporal.jpg', 'name': 'Criofrecuencia', 'description': 'Descripción del servicio...', 'price': '$115'},
-        {'id': 14, 'image': 'ultraCavitacion.jpg', 'name': 'Ultracavitación', 'description': 'Descripción del servicio...', 'price': '$105'}
+        {'id': 11, 'image': 'velaSlim.jpg', 'name': 'VelaSlim', 'description': 'Tratamiento que combina succión y energía para reducir la celulitis y moldear el contorno corporal.', 'price': '$120'},
+        {'id': 12, 'image': 'dermoHealth.jpg', 'name': 'DermoHealth', 'description': 'Tecnología avanzada que mejora la oxigenación y la circulación de la piel, promoviendo una apariencia más saludable y rejuvenecida.', 'price': '$110'},
+        {'id': 13, 'image': 'crioFrecuenciaCorporal.jpg', 'name': 'Criofrecuencia', 'description': 'Terapia que utiliza frío y radiofrecuencia para reducir la grasa localizada y tonificar la piel en áreas específicas del cuerpo.', 'price': '$115'},
+        {'id': 14, 'image': 'ultraCavitacion.jpg', 'name': 'Ultracavitación', 'description': 'Tratamiento no invasivo que utiliza ultrasonido para eliminar la grasa localizada, mejorando el contorno corporal.', 'price': '$105'}
     ]
 }
 

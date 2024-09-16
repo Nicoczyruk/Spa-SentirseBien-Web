@@ -14,7 +14,7 @@
 
         <!-- Contenedor con borde redondeado -->
         <div class="card shadow-sm p-4 mb-5 bg-white rounded">
-            <form action="/submit-job-application" method="post" enctype="multipart/form-data">
+            <form id="jobApplicationForm" action="/submit-job-application" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="email" class="form-label">Correo Electrónico</label>
                     <input type="email" class="form-control" id="email" name="email" placeholder="nombre@ejemplo.com" required>
@@ -37,4 +37,17 @@
 
         <p class="mt-4">Los candidatos pasarán por un proceso de selección donde evaluaremos sus habilidades y experiencia. Nos pondremos en contacto contigo si tu perfil se ajusta a nuestras necesidades.</p>
     </div>
+
+    <!-- Agregar script para mostrar la notificación -->
+    <script>
+        document.getElementById('jobApplicationForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Evita que el formulario se envíe
+
+            
+            alert('¡Tu CV ha sido enviado con éxito!');
+
+            
+            this.reset();
+        });
+    </script>
 {% endblock %}
