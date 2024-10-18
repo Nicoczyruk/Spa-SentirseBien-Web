@@ -8,6 +8,7 @@ from sqlalchemy.exc import SQLAlchemyError
 import logging
 from sqlalchemy import text
 from datetime import datetime, timedelta
+import bcrypt
 
 main = Blueprint('main', __name__)
 # Configurar logging para debugging
@@ -110,29 +111,38 @@ def get_db_connection():
     conn = pyodbc.connect(odbc_connection_string)
     return conn
 
+
 @app.route('/login', methods=['POST'])
 def login():
-    email = request.form.get('email')
-    password = request.form.get('password')
+    email = request.form.get('email')  # Usar request.form para x-www-form-urlencoded
+    password = request.form.get('password').encode('utf-8')
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT id_usuario, nombre_usuario, email, password, rol FROM usuarios WHERE email = ?", (email,))
+    cursor.execute("""
+        SELECT id_usuario, nombre_usuario, email, password, rol 
+        FROM usuarios 
+        WHERE email = ?
+    """, (email,))
     user = cursor.fetchone()
     conn.close()
 
-    if user and check_password_hash(user[3], password):
-        user_obj = User(id=user[0], nombre_usuario=user[1], email=user[2], rol=user[4])
-        login_user(user_obj)  # Esto debería guardar el user_id en la sesión
+    if user:
+        stored_password_hash = user[3]
 
-        session.permanent = True  # Asegura que la sesión sea permanente
+        if bcrypt.checkpw(password, stored_password_hash.encode('utf-8')):
+            user_obj = User(id=user[0], nombre_usuario=user[1], email=user[2], rol=user[4])
+            login_user(user_obj)
 
-        print(f"User logged in with ID: {user_obj.get_id()}")
-        print(f"Session contents: {session.items()}")
-
-        return jsonify({'success': True, 'message': 'Login successful', 'username': user[1]})
+            session.permanent = True
+            return jsonify({'success': True, 'message': 'Login exitoso', 'username': user[1]}), 200
+        else:
+            return jsonify({'success': False, 'message': 'Credenciales inválidas'}), 401
     else:
-        return jsonify({'success': False, 'message': 'Invalid credentials'})
+        return jsonify({'success': False, 'message': 'Usuario no encontrado'}), 401
+
+
+
     
 @app.route('/check_session', methods=['GET'])
 def check_session():
@@ -150,52 +160,60 @@ def logout():
 
 @app.route('/register', methods=['POST'])
 def register():
-    data = request.json
     try:
+        # Obtener los datos enviados por el frontend
+        data = request.get_json()
+
+        # Validar que todos los campos requeridos estén presentes
+        if not all([data.get('nombre'), data.get('apellido'), data.get('email'), 
+                    data.get('nombre_usuario'), data.get('password')]):
+            return jsonify({'success': False, 'message': 'Todos los campos son obligatorios.'}), 400
+
+        # Conectar a la base de datos
         conn = get_db_connection()
         cursor = conn.cursor()
 
         # Verificar si el email ya existe en clientes
         cursor.execute("SELECT id_cliente FROM clientes WHERE email = ?", (data['email'],))
-        existing_client = cursor.fetchone()
-        if existing_client is not None:
-            conn.close()
-            return jsonify({'success': False, 'message': 'El email ya está en uso.'})
+        if cursor.fetchone():
+            return jsonify({'success': False, 'message': 'El email ya está en uso.'}), 400
 
         # Verificar si el nombre de usuario ya existe en usuarios
         cursor.execute("SELECT id_usuario FROM usuarios WHERE nombre_usuario = ?", (data['nombre_usuario'],))
-        existing_user = cursor.fetchone()
-        if existing_user is not None:
-            conn.close()
-            return jsonify({'success': False, 'message': 'El nombre de usuario ya está en uso.'})
+        if cursor.fetchone():
+            return jsonify({'success': False, 'message': 'El nombre de usuario ya está en uso.'}), 400
 
-        # Inserta el nuevo cliente
+        # Insertar en la tabla de clientes y obtener el id_cliente
         cursor.execute("""
-            INSERT INTO clientes (nombre, apellido, email, telefono, direccion)
-            VALUES (?, ?, ?, ?, ?);
+            INSERT INTO clientes (nombre, apellido, email, telefono, direccion) 
+            OUTPUT INSERTED.id_cliente
+            VALUES (?, ?, ?, ?, ?)
         """, (data['nombre'], data['apellido'], data['email'], data['telefono'], data['direccion']))
-        
-        conn.commit()
-
-        # Obtener el ID del cliente recién insertado usando el email
-        cursor.execute("SELECT id_cliente FROM clientes WHERE email = ?", (data['email'],))
         id_cliente = cursor.fetchone()[0]
 
-        # Hashear la contraseña
-        hashed_password = generate_password_hash(data['password'])
+        # Hashear la contraseña usando bcrypt
+        hashed_password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
-        # Crear el usuario vinculado al cliente con el rol de "Cliente"
+        # Insertar el nuevo usuario vinculado al cliente
         cursor.execute("""
-            INSERT INTO usuarios (id_cliente, nombre_usuario, password, email, rol)
-            VALUES (?, ?, ?, ?, ?);
-        """, (id_cliente, data['nombre_usuario'], hashed_password, data['email'], 'Cliente'))
+            INSERT INTO usuarios (id_cliente, nombre_usuario, password, email, rol) 
+            VALUES (?, ?, ?, ?, 'Cliente')
+        """, (id_cliente, data['nombre_usuario'], hashed_password, data['email']))
 
+        # Confirmar los cambios en la base de datos
         conn.commit()
         conn.close()
 
-        return jsonify({'success': True, 'message': 'Registro exitoso'})
+        return jsonify({'success': True, 'message': 'Registro exitoso'}), 201
+
     except Exception as e:
-        return jsonify({'success': False, 'message': str(e)})
+        # Manejo de errores y rollback en caso de excepción
+        if 'conn' in locals():
+            conn.rollback()
+            conn.close()
+        return jsonify({'success': False, 'message': f'Error en el registro: {str(e)}'}), 500
+
+
 
     
 @app.route('/perfil', methods=['GET', 'POST'])
