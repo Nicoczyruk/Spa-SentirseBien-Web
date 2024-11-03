@@ -187,6 +187,9 @@
         <img src="{{ url_for('static', filename='assets/img/pagofacil.png') }}" alt="Pago Fácil">
         <img src="{{ url_for('static', filename='assets/img/rapipago.png') }}" alt="Rapipago">
     </div>
+    <div class="reservation-info">
+        Para reservas, por favor dirigirse al portal del SPA. ¡Gracias!
+    </div>
 </div>
 
 <!-- Sección de Servicios -->
@@ -204,11 +207,6 @@
                 <div class="service-info">
                     <p>{{ service['description'] }}</p>
                     <h4>Precio: {{ service['price'] }}</h4>
-                    {% if current_user.is_authenticated %}
-                        <a href="{{ url_for('elegir_turno', servicio_id=service['id']) }}" class="btn btn-primary btn-choose">Elegir</a>
-                    {% else %}
-                        <a href="#" class="btn btn-primary btn-choose" onclick="alert('Debe estar logeado para poder elegir servicios')">Elegir</a>
-                    {% endif %}
                 </div>
             </div>
         </div>
